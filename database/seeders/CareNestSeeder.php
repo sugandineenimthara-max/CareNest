@@ -1,0 +1,50 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Area;
+use App\Models\Midwife;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+
+class CareNestSeeder extends Seeder
+{
+    public function run(): void
+    {
+        User::firstOrCreate(
+            ['email' => 'admin@carenest.com'],
+            [
+                'name' => 'System Admin',
+                'password' => Hash::make('admin123'),
+                'role' => 'provider',
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'kamala@example.com'],
+            [
+                'name' => 'Kamala Silva',
+                'password' => Hash::make('password123'),
+                'role' => 'mother',
+            ]
+        );
+
+        $areas = [
+            'Kala-Eliya',
+            'Indivitiya',
+            'Wewala',
+            'Kapuwaththa-01',
+            'Kapuwaththa-02',
+        ];
+
+        foreach ($areas as $areaName) {
+            $area = Area::firstOrCreate(['area_name' => $areaName]);
+            
+            Midwife::firstOrCreate(
+                ['area_id' => $area->area_id],
+                ['midwife_name' => 'Midwife (' . $areaName . ')']
+            );
+        }
+    }
+}
