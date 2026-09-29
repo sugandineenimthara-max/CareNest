@@ -46,6 +46,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:provider')->post('/admin/midwife-requests/{id}/approve', [\App\Http\Controllers\AdminController::class, 'approveMidwife'])->name('admin.midwife.approve');
     Route::middleware('role:provider')->post('/admin/midwife-requests/{id}/reject', [\App\Http\Controllers\AdminController::class, 'rejectMidwife'])->name('admin.midwife.reject');
 
+    // Admin Manage Midwives
+    Route::middleware('role:provider')->get('/admin/midwives', [\App\Http\Controllers\AdminController::class, 'manageMidwives'])->name('admin.midwives.index');
+    Route::middleware('role:provider')->get('/admin/midwives/{id}/edit', [\App\Http\Controllers\AdminController::class, 'editMidwife'])->name('admin.midwives.edit');
+    Route::middleware('role:provider')->put('/admin/midwives/{id}', [\App\Http\Controllers\AdminController::class, 'updateMidwife'])->name('admin.midwives.update');
+    Route::middleware('role:provider')->delete('/admin/midwives/{id}', [\App\Http\Controllers\AdminController::class, 'deleteMidwife'])->name('admin.midwives.destroy');
+
 
     // -------------------------------------------------------------
     // YOUR TEAMMATE'S ROUTES (From feature/mother-management)

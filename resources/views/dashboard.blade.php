@@ -585,6 +585,12 @@
                     <span>Midwife Requests</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('admin.midwives.index') }}">
+                    <i class="fa-solid fa-user-nurse"></i>
+                    <span>Manage Midwives</span>
+                </a>
+            </li>
             @endif
             <li class="nav-item">
                 <a href="{{ route('mothers.index') }}">
