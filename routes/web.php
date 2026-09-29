@@ -11,16 +11,35 @@ Route::get('/', function () {
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+// Mother Registration
+Route::get('/register/mother', [AuthController::class, 'showRegisterMother'])->name('register.mother');
+Route::post('/register/mother', [AuthController::class, 'registerMother']);
 
-Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+// Midwife Registration
+Route::get('/register/midwife', [AuthController::class, 'showRegisterMidwife'])->name('register.midwife');
+Route::post('/register/midwife', [AuthController::class, 'registerMidwife']);
 
+// Protected Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // Generic Dashboard Redirect to fix route('dashboard') references
+    Route::get('/dashboard', function() {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if ($user->role === 'provider' || $user->role === 'admin') return redirect()->route('admin.dashboard');
+        if ($user->role === 'midwife') return redirect()->route('midwife.dashboard');
+        if ($user->role === 'mother') return redirect()->route('mother.dashboard');
+        return redirect()->route('login');
+    })->name('dashboard');
+
+    // Role-based Dashboards (Currently all point to DashboardController, but protected by RoleMiddleware)
+    Route::middleware('role:provider')->get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::middleware('role:midwife')->get('/midwife/dashboard', [DashboardController::class, 'index'])->name('midwife.dashboard');
+    Route::middleware('role:mother')->get('/mother/dashboard', [DashboardController::class, 'index'])->name('mother.dashboard');
+
+    // Admin Midwife Approval
+    Route::middleware('role:provider')->get('/admin/midwife-requests', [\App\Http\Controllers\AdminController::class, 'midwifeRequests'])->name('admin.midwife-requests');
+    Route::middleware('role:provider')->post('/admin/midwife-requests/{id}/approve', [\App\Http\Controllers\AdminController::class, 'approveMidwife'])->name('admin.midwife.approve');
+    Route::middleware('role:provider')->post('/admin/midwife-requests/{id}/reject', [\App\Http\Controllers\AdminController::class, 'rejectMidwife'])->name('admin.midwife.reject');
 });

@@ -158,6 +158,18 @@
         <h1 class="login-title">Welcome Back</h1>
         <p class="login-subtitle">MATERNAL & PEDIATRIC CARE SYSTEM</p>
 
+        @if(session('success'))
+            <div style="background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 20px; text-align: left;">
+                <i class="fa-solid fa-check-circle me-1"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="error-alert">
+                <i class="fa-solid fa-circle-exclamation me-1"></i> {{ session('error') }}
+            </div>
+        @endif
+
         @if($errors->any())
             <div class="error-alert">
                 <i class="fa-solid fa-circle-exclamation me-1"></i> {{ $errors->first() }}
@@ -169,9 +181,9 @@
 
             <!-- Username / Email -->
             <div class="input-wrapper-login">
-                <label class="input-label">USERNAME</label>
+                <label class="input-label">USERNAME OR EMAIL</label>
                 <div class="input-wrapper" style="margin-bottom: 0;">
-                    <input type="text" name="email" class="input-field" placeholder="Enter your username or email" value="{{ old('email') }}" required autofocus>
+                    <input type="text" name="email" class="input-field" placeholder="Enter your username, email, or phone" value="{{ old('email') }}" required autofocus>
                     <i class="fa-regular fa-user input-icon"></i>
                 </div>
             </div>
@@ -180,7 +192,7 @@
             <div class="input-wrapper-login">
                 <div style="margin-bottom: 8px;">
                     <label class="input-label" style="display: inline-block;">PASSWORD</label>
-                    <a href="{{ route('password.request') }}" class="forgot-link">Forgot Password?</a>
+                    <a href="#" class="forgot-link">Forgot Password?</a>
                 </div>
                 <div class="input-wrapper" style="margin-bottom: 0;">
                     <input type="password" name="password" class="input-field" placeholder="••••••••" required>
@@ -194,9 +206,14 @@
                     Login <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
-                <a href="{{ route('register') }}" class="btn-pink">
-                    Register
-                </a>
+                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                    <a href="{{ route('register.mother') }}" class="btn-pink" style="flex: 1; font-size: 13px; text-align: center;">
+                        Register as Mother
+                    </a>
+                    <a href="{{ route('register.midwife') }}" class="btn-pink" style="flex: 1; font-size: 13px; text-align: center; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0;">
+                        Register as Midwife
+                    </a>
+                </div>
             </div>
         </form>
     </div>

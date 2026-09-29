@@ -30,6 +30,15 @@ class CareNestSeeder extends Seeder
             ]
         );
 
+        User::firstOrCreate(
+            ['email' => 'midwife@carenest.com'],
+            [
+                'name' => 'Midwife User',
+                'password' => Hash::make('midwife123'),
+                'role' => 'midwife',
+            ]
+        );
+
         $areas = [
             'Kala-Eliya',
             'Indivitiya',
