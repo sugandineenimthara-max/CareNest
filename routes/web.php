@@ -1,3 +1,26 @@
+<?php
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MotherController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Mother Registration
+Route::get('/register/mother', [AuthController::class, 'showRegisterMother'])->name('register.mother');
+Route::post('/register/mother', [AuthController::class, 'registerMother']);
+
+// Midwife Registration
+Route::get('/register/midwife', [AuthController::class, 'showRegisterMidwife'])->name('register.midwife');
+Route::post('/register/midwife', [AuthController::class, 'registerMidwife']);
+
 // Protected Routes
 Route::middleware('auth')->group(function () {
     
