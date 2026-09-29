@@ -579,11 +579,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#mothers">
+                <a href="{{ route('mothers.index') }}">
                     <i class="fa-solid fa-user-nurse"></i>
                     <span>Mothers</span>
                 </a>
             </li>
+
             <li class="nav-item">
                 <a href="#children">
                     <i class="fa-solid fa-baby"></i>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\MotherController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,4 +24,13 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Mothers
+    Route::get('/mothers', [MotherController::class, 'index'])->name('mothers.index');
+    Route::get('/mothers/create', [MotherController::class, 'create'])->name('mothers.create');
+    Route::post('/mothers', [MotherController::class, 'store'])->name('mothers.store');
+    Route::get('/mothers/{id}', [MotherController::class, 'show'])->name('mothers.show');
+    Route::get('/mothers/{id}/edit', [MotherController::class, 'edit'])->name('mothers.edit');
+    Route::put('/mothers/{id}', [MotherController::class, 'update'])->name('mothers.update');
 });
+
