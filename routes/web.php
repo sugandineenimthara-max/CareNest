@@ -58,4 +58,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/mothers/{id}/edit', [MotherController::class, 'edit'])->name('mothers.edit');
     Route::put('/mothers/{id}', [MotherController::class, 'update'])->name('mothers.update');
 
+    // Children
+    Route::get('/children', [\App\Http\Controllers\ChildController::class, 'index'])->name('children.index');
+    Route::get('/children/create', [\App\Http\Controllers\ChildController::class, 'create'])->name('children.create');
+    Route::post('/children', [\App\Http\Controllers\ChildController::class, 'store'])->name('children.store');
+    Route::get('/children/{id}', [\App\Http\Controllers\ChildController::class, 'show'])->name('children.show');
+    Route::get('/children/{id}/edit', [\App\Http\Controllers\ChildController::class, 'edit'])->name('children.edit');
+    Route::put('/children/{id}', [\App\Http\Controllers\ChildController::class, 'update'])->name('children.update');
+    Route::delete('/children/{id}', [\App\Http\Controllers\ChildController::class, 'destroy'])->name('children.destroy');
+
+    // Immunizations
+    Route::get('/immunizations', [\App\Http\Controllers\ImmunizationController::class, 'index'])->name('immunizations.index');
+    Route::post('/immunizations/child', [\App\Http\Controllers\ImmunizationController::class, 'storeChildVaccine'])->name('immunizations.child.store');
+    Route::post('/immunizations/mother', [\App\Http\Controllers\ImmunizationController::class, 'storeMotherVaccine'])->name('immunizations.mother.store');
 });

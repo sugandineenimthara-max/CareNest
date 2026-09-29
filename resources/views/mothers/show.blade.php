@@ -111,12 +111,11 @@
         <ul class="sidebar-menu">
             <li class="nav-item"><a href="{{ route('dashboard') }}"><i class="fa-solid fa-table-cells-large"></i><span>Dashboard</span></a></li>
             <li class="nav-item active"><a href="{{ route('mothers.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Mothers</span></a></li>
-            <li class="nav-item"><a href="#children"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
-            <li class="nav-item"><a href="#immunizations"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
+            <li class="nav-item"><a href="{{ route('children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
+            <li class="nav-item"><a href="{{ route('immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
             <li class="nav-item"><a href="#alerts"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
-            <li class="nav-item"><a href="#areas"><i class="fa-solid fa-hospital"></i><span>Clinic Areas</span></a></li>
-            <li class="nav-item"><a href="#pregnancy-history"><i class="fa-solid fa-notes-medical"></i><span>Pregnancy History</span></a></li>
-            <li class="nav-item"><a href="#lab-tests"><i class="fa-solid fa-vial-circle-check"></i><span>Lab Tests</span></a></li>
+
+
             <li class="nav-item"><a href="#triposha"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
             <li class="nav-item"><a href="#attendances"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
             <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>

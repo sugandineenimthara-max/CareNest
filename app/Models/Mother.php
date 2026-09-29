@@ -101,4 +101,19 @@ class Mother extends Model
     {
         return $this->hasMany(TriposhaBook::class, 'mother_id', 'mother_id');
     }
+
+    public function immunizations(): HasMany
+    {
+        return $this->hasMany(Immunization::class, 'mother_id', 'mother_id');
+    }
+
+    public function getPregnancyNumberAttribute(): int
+    {
+        return $this->previousPregnancyHistories()->count() + 1;
+    }
+
+    public function isTetanusSafe(): bool
+    {
+        return $this->pregnancy_number > 4;
+    }
 }

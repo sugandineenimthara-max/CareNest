@@ -594,13 +594,13 @@
             </li>
 
             <li class="nav-item">
-                <a href="#children">
+                <a href="{{ route('children.index') }}">
                     <i class="fa-solid fa-baby"></i>
                     <span>Children</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#immunizations">
+                <a href="{{ route('immunizations.index') }}">
                     <i class="fa-solid fa-syringe"></i>
                     <span>Immunizations</span>
                 </a>
@@ -611,26 +611,7 @@
                     <span>High-Risk Alerts</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="#areas">
-                    <i class="fa-solid fa-hospital"></i>
-                    <span>Clinic Areas</span>
-                </a>
-            </li>
-
-            <!-- Additional Sections mapped to 13 database tables -->
-            <li class="nav-item">
-                <a href="#pregnancy-history">
-                    <i class="fa-solid fa-notes-medical"></i>
-                    <span>Pregnancy History</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#lab-tests">
-                    <i class="fa-solid fa-vial-circle-check"></i>
-                    <span>Lab Tests</span>
-                </a>
-            </li>
+            <!-- Additional Sections mapped to database tables -->
             <li class="nav-item">
                 <a href="#triposha">
                     <i class="fa-solid fa-book-medical"></i>
