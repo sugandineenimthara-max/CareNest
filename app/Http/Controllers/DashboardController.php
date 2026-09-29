@@ -42,6 +42,18 @@ class DashboardController extends Controller
 
         $recentAttendances = Attendance::with(['mother', 'child', 'midwife'])->latest()->take(5)->get();
 
+        // Get mothers with high blood pressure from family health history
+        $highBPMothers = \App\Models\FamilyHealthHistory::with(['mother.user', 'mother.midwife.area'])
+            ->whereNotNull('high_blood_pressure')
+            ->where('high_blood_pressure', '!=', 'no')
+            ->where('high_blood_pressure', '!=', 'No')
+            ->where('high_blood_pressure', '!=', 'false')
+            ->where('high_blood_pressure', '!=', '0')
+            ->where('high_blood_pressure', '!=', '')
+            ->latest()
+            ->take(5)
+            ->get();
+
         return view('dashboard', compact(
             'user',
             'registeredMothersCount',
@@ -50,7 +62,8 @@ class DashboardController extends Controller
             'immunizationsDueCount',
             'triposhaPacketsCount',
             'clinicAreas',
-            'recentAttendances'
+            'recentAttendances',
+            'highBPMothers'
         ));
     }
 }

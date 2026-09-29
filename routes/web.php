@@ -64,4 +64,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/mothers/{id}/edit', [MotherController::class, 'edit'])->name('mothers.edit');
     Route::put('/mothers/{id}', [MotherController::class, 'update'])->name('mothers.update');
 
+    // High-Risk Alerts
+    Route::get('/alerts', [\App\Http\Controllers\AlertController::class, 'index'])->name('alerts.index');
 });
