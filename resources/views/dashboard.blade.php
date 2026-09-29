@@ -578,6 +578,14 @@
                     <span>Dashboard</span>
                 </a>
             </li>
+            @if(Auth::user()->role === 'provider' || Auth::user()->role === 'admin')
+            <li class="nav-item">
+                <a href="{{ route('admin.midwife-requests') }}">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Midwife Requests</span>
+                </a>
+            </li>
+            @endif
             <li class="nav-item">
                 <a href="#mothers">
                     <i class="fa-solid fa-user-nurse"></i>
