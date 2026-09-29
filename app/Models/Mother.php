@@ -26,7 +26,13 @@ class Mother extends Model
         'husband_occupation',
         'date_of_birth',
         'address',
+        'user_id',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     protected $casts = [
         'date_of_birth' => 'date',
