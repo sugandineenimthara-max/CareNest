@@ -612,7 +612,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#alerts">
+                <a href="{{ route('alerts.index') }}">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     <span>High-Risk Alerts</span>
                 </a>
@@ -803,6 +803,61 @@
                         @empty
                             <tr>
                                 <td colspan="6" style="text-align: center; color: #94a3b8;">No clinic areas available.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- High Blood Pressure Alerts Card -->
+            <div class="table-card" id="alerts" style="margin-bottom: 60px;">
+                <div class="table-header">
+                    <h2 class="table-title">High-Risk Alerts <span style="font-size: 14px; color: #ef4444; background: #fee2e2; padding: 4px 12px; border-radius: 20px; vertical-align: middle; margin-left: 8px;">High Blood Pressure</span></h2>
+                    <p class="table-subtitle">Mothers requiring immediate attention due to elevated blood pressure</p>
+                </div>
+
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>MOTHER'S NAME</th>
+                            <th>CONTACT NO</th>
+                            <th>CONDITION</th>
+                            <th>CLINIC AREA</th>
+                            <th>MIDWIFE IN-CHARGE</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($highBPMothers as $history)
+                            <tr>
+                                <td>
+                                    <div class="area-name-cell">
+                                        <div class="area-icon-dot" style="background: #fee2e2; color: #ef4444;">
+                                            <i class="fa-solid fa-heart-pulse"></i>
+                                        </div>
+                                        <span>{{ $history->mother->user->name ?? 'Unknown' }}</span>
+                                    </div>
+                                </td>
+                                <td>{{ $history->mother->telephone ?? '-' }}</td>
+                                <td>
+                                    <span style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 4px 10px; border-radius: 12px; font-size: 12px; border: 1px solid #fecaca; display: inline-block; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        {{ $history->high_blood_pressure }}
+                                    </span>
+                                </td>
+                                <td>{{ $history->mother->midwife->area->area_name ?? '-' }}</td>
+                                <td>{{ $history->mother->midwife->user->name ?? '-' }}</td>
+                                <td>
+                                    <button class="action-arrow-btn" title="View Details">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #94a3b8; padding: 30px;">
+                                    <i class="fa-solid fa-shield-heart" style="font-size: 32px; color: #e2e8f0; display: block; margin-bottom: 12px;"></i>
+                                    No high blood pressure alerts found.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
