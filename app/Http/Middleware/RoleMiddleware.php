@@ -14,7 +14,7 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
         if (!Auth::check()) {
             return redirect('/login');
@@ -33,13 +33,8 @@ class RoleMiddleware
             return redirect()->route('login')->with('error', 'Your account has been deactivated.');
         }
 
-        // Admin has super-user access to everything
-        if ($user->role === 'provider' || $user->role === 'admin') {
-            return $next($request);
-        }
-
-        // Check if user has the specific role
-        if ($user->role !== $role) {
+        // Check if user has one of the specific roles
+        if (!in_array($user->role, $roles)) {
             abort(403, 'You do not have permission to access this page.');
         }
 

@@ -40,7 +40,20 @@ class DashboardController extends Controller
             return $area;
         });
 
-        $recentAttendances = Attendance::with(['mother', 'child', 'midwife'])->latest()->take(5)->get();
+        $attendancesQuery = Attendance::with(['mother', 'child', 'midwife']);
+        
+        if ($user->role === 'mother') {
+            if ($user->mother) {
+                $attendancesQuery->where('mother_id', $user->mother->mother_id);
+            } else {
+                // If no mother profile, return empty
+                $attendancesQuery->where('mother_id', -1);
+            }
+        } elseif ($user->role === 'midwife' && $user->midwife) {
+            $attendancesQuery->where('midwife_id', $user->midwife->midwife_id);
+        }
+        
+        $recentAttendances = $attendancesQuery->latest()->take(5)->get();
 
         // Get mothers with high blood pressure from family health history
         $highBPMothers = \App\Models\FamilyHealthHistory::with(['mother.user', 'mother.midwife.area'])

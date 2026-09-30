@@ -18,6 +18,8 @@ class MotherController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Mother::class);
+
         $user = Auth::user();
         $search = $request->query('search');
 
@@ -43,6 +45,8 @@ class MotherController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Mother::class);
+
         $user = Auth::user();
         $midwives = Midwife::with('area')->get();
         return view('mothers.create', compact('user', 'midwives'));
@@ -53,6 +57,8 @@ class MotherController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Mother::class);
+
         $validated = $request->validate([
             // Mother details
             'mother_name'        => 'required|string|max:255',
@@ -170,7 +176,7 @@ class MotherController extends Controller
             }
         });
 
-        return redirect()->route('mothers.index')
+        return redirect()->route($request->user()->role === 'midwife' ? 'midwife.mothers.index' : 'admin.mothers.index')
             ->with('success', 'Mother registered successfully!');
     }
 
@@ -179,7 +185,6 @@ class MotherController extends Controller
      */
     public function show($id)
     {
-        $user = Auth::user();
         $mother = Mother::with([
             'midwife.area',
             'pregnancyHistories',
@@ -191,6 +196,10 @@ class MotherController extends Controller
             'children',
         ])->findOrFail($id);
 
+        $this->authorize('view', $mother);
+
+        $user = Auth::user();
+
         return view('mothers.show', compact('user', 'mother'));
     }
 
@@ -199,12 +208,15 @@ class MotherController extends Controller
      */
     public function edit($id)
     {
-        $user = Auth::user();
         $mother = Mother::with([
             'pregnancyHistories',
             'previousPregnancyHistories',
             'familyHealthHistory',
         ])->findOrFail($id);
+
+        $this->authorize('update', $mother);
+
+        $user = Auth::user();
 
         $midwives = Midwife::with('area')->get();
 
@@ -217,6 +229,7 @@ class MotherController extends Controller
     public function update(Request $request, $id)
     {
         $mother = Mother::findOrFail($id);
+        $this->authorize('update', $mother);
 
         $validated = $request->validate([
             'mother_name'        => 'required|string|max:255',
@@ -232,7 +245,33 @@ class MotherController extends Controller
 
         $mother->update($validated);
 
-        return redirect()->route('mothers.show', $mother->mother_id)
+        return redirect()->route($request->user()->role === 'midwife' ? 'midwife.mothers.show' : 'admin.mothers.show', $mother->mother_id)
             ->with('success', 'Mother record updated successfully!');
+    }
+
+    /**
+     * Display mother's own profile.
+     */
+    public function profile()
+    {
+        $user = Auth::user();
+        $mother = $user->mother;
+
+        if (!$mother) {
+            abort(404, 'Mother profile not found.');
+        }
+
+        $mother->load([
+            'midwife.area',
+            'pregnancyHistories',
+            'previousPregnancyHistories',
+            'familyHealthHistory',
+            'testsDone',
+            'triposhaBooks',
+            'attendances',
+            'children',
+        ]);
+
+        return view('mothers.show', compact('user', 'mother'));
     }
 }

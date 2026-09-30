@@ -19,6 +19,8 @@ class ChildController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Child::class);
+
         $user = Auth::user();
         $search = $request->query('search');
         $areaFilter = $request->query('area_id');
@@ -31,7 +33,7 @@ class ChildController extends Controller
             $areasQuery->where('area_id', $areaFilter);
         }
 
-        $areas = $areasQuery->get()->map(function ($area) use ($search) {
+        $areas = $areasQuery->get()->map(function ($area) use ($search, $user) {
             $childrenQuery = Child::with(['mother.midwife', 'midwife', 'immunizations'])
                 ->where(function ($q) use ($area) {
                     $q->where('area_id', $area->area_id)
@@ -49,6 +51,19 @@ class ChildController extends Controller
                           $mq->where('mother_id', 'like', "%{$search}%")
                             ->orWhere('mother_name', 'like', "%{$search}%")
                             ->orWhere('phone_no', 'like', "%{$search}%");
+                      });
+                });
+            }
+
+            if ($user->role === 'mother') {
+                if (!$user->mother) abort(403, 'Your mother profile is not linked or incomplete. Please contact the administrator.');
+                $childrenQuery->where('mother_id', $user->mother->mother_id);
+            } elseif ($user->role === 'midwife' && $user->midwife) {
+                // Midwife can only see children in their assigned area
+                $childrenQuery->where(function($q) use ($user) {
+                    $q->where('midwife_id', $user->midwife->midwife_id)
+                      ->orWhereHas('mother', function ($mq) use ($user) {
+                          $mq->where('midwife_id', $user->midwife->midwife_id);
                       });
                 });
             }
@@ -83,6 +98,8 @@ class ChildController extends Controller
      */
     public function create(Request $request)
     {
+        $this->authorize('create', Child::class);
+
         $user = Auth::user();
         $selectedMotherId = $request->query('mother_id');
         $mothers = Mother::with(['midwife.area'])->orderBy('mother_name')->get();
@@ -97,6 +114,8 @@ class ChildController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Child::class);
+
         $validated = $request->validate([
             'mother_id' => 'required|exists:mothers,mother_id',
             'child_name' => 'nullable|string|max:255',
@@ -152,7 +171,7 @@ class ChildController extends Controller
 
             DB::commit();
 
-            return redirect()->route('children.show', $child->child_id)
+            return redirect()->route($user->role === 'midwife' ? 'midwife.children.show' : 'admin.children.show', $child->child_id)
                 ->with('success', 'Child registered successfully and linked to Mother ' . $mother->mother_name . ' (ID: ' . $mother->mother_id . ')');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -165,8 +184,10 @@ class ChildController extends Controller
      */
     public function show(int $id)
     {
-        $user = Auth::user();
         $child = Child::with(['mother.midwife.area', 'midwife.area', 'area', 'immunizations.midwife'])->findOrFail($id);
+        $this->authorize('view', $child);
+
+        $user = Auth::user();
 
         $standardSchedule = Child::getVaccinationSchedule();
         $childDob = Carbon::parse($child->date_of_birth);
@@ -214,8 +235,10 @@ class ChildController extends Controller
      */
     public function edit(int $id)
     {
-        $user = Auth::user();
         $child = Child::with(['mother', 'midwife'])->findOrFail($id);
+        $this->authorize('update', $child);
+
+        $user = Auth::user();
         $mothers = Mother::with(['midwife.area'])->orderBy('mother_name')->get();
         $midwives = Midwife::with('area')->get();
         $areas = Area::all();
@@ -229,6 +252,7 @@ class ChildController extends Controller
     public function update(Request $request, int $id)
     {
         $child = Child::findOrFail($id);
+        $this->authorize('update', $child);
 
         $validated = $request->validate([
             'mother_id' => 'required|exists:mothers,mother_id',
@@ -250,7 +274,7 @@ class ChildController extends Controller
 
         $child->update($validated);
 
-        return redirect()->route('children.show', $child->child_id)->with('success', 'Child details updated successfully.');
+        return redirect()->route($request->user()->role === 'midwife' ? 'midwife.children.show' : 'admin.children.show', $child->child_id)->with('success', 'Child details updated successfully.');
     }
 
     /**
@@ -259,8 +283,9 @@ class ChildController extends Controller
     public function destroy(int $id)
     {
         $child = Child::findOrFail($id);
+        $this->authorize('delete', $child);
         $child->delete();
 
-        return redirect()->route('children.index')->with('success', 'Child record removed successfully.');
+        return redirect()->route('admin.children.index')->with('success', 'Child record removed successfully.');
     }
 }
