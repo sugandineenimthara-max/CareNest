@@ -183,6 +183,20 @@
                     <span>Dashboard</span>
                 </a>
             </li>
+            @if(Auth::check() && (Auth::user()->role === 'provider' || Auth::user()->role === 'admin'))
+            <li class="nav-item">
+                <a href="{{ route('admin.midwife-requests') }}">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Midwife Requests</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('admin.midwives.index') }}">
+                    <i class="fa-solid fa-user-nurse"></i>
+                    <span>Manage Midwives</span>
+                </a>
+            </li>
+            @endif
             <li class="nav-item active">
                 <a href="{{ route('mothers.index') }}">
                     <i class="fa-solid fa-user-nurse"></i>
@@ -194,7 +208,7 @@
             <li class="nav-item"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
 
 
-            <li class="nav-item"><a href="#triposha"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
+            <li class="nav-item"><a href="{{ route('triposha.index') }}"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
             <li class="nav-item"><a href="#attendances"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
             <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
         </ul>

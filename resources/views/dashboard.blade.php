@@ -619,7 +619,7 @@
             </li>
             <!-- Additional Sections mapped to database tables -->
             <li class="nav-item">
-                <a href="#triposha">
+                <a href="{{ route('triposha.index') }}">
                     <i class="fa-solid fa-book-medical"></i>
                     <span>Triposha Book</span>
                 </a>

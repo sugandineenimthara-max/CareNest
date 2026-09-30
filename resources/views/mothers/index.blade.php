@@ -280,6 +280,20 @@
                     <span>Dashboard</span>
                 </a>
             </li>
+            @if(Auth::check() && (Auth::user()->role === 'provider' || Auth::user()->role === 'admin'))
+            <li class="nav-item">
+                <a href="{{ route('admin.midwife-requests') }}">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Midwife Requests</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('admin.midwives.index') }}">
+                    <i class="fa-solid fa-user-nurse"></i>
+                    <span>Manage Midwives</span>
+                </a>
+            </li>
+            @endif
             <li class="nav-item active">
                 <a href="{{ route('mothers.index') }}">
                     <i class="fa-solid fa-user-nurse"></i>
@@ -306,7 +320,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="#triposha">
+                <a href="{{ route('triposha.index') }}">
                     <i class="fa-solid fa-book-medical"></i>
                     <span>Triposha Book</span>
                 </a>

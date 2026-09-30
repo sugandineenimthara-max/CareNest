@@ -79,4 +79,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/immunizations/mother', [\App\Http\Controllers\ImmunizationController::class, 'storeMotherVaccine'])->name('immunizations.mother.store');
     // High-Risk Alerts
     Route::get('/alerts', [\App\Http\Controllers\AlertController::class, 'index'])->name('alerts.index');
+
+    // Thriposha Book
+    Route::get('/triposha', [\App\Http\Controllers\TriposhaBookController::class, 'index'])->name('triposha.index');
+    Route::post('/triposha/batch', [\App\Http\Controllers\TriposhaBookController::class, 'storeBatch'])->name('triposha.store.batch');
+    Route::delete('/triposha/{id}', [\App\Http\Controllers\TriposhaBookController::class, 'destroy'])->name('triposha.destroy');
 });
