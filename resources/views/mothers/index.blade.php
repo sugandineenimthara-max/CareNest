@@ -299,7 +299,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#alerts">
+                <a href="{{ route('alerts.index') }}">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     <span>High-Risk Alerts</span>
                 </a>

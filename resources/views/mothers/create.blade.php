@@ -191,7 +191,7 @@
             </li>
             <li class="nav-item"><a href="{{ route('children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
             <li class="nav-item"><a href="{{ route('immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
-            <li class="nav-item"><a href="#alerts"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
+            <li class="nav-item"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
 
 
             <li class="nav-item"><a href="#triposha"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
