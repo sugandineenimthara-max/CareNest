@@ -18,6 +18,8 @@ class ImmunizationController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Immunization::class);
+
         $user = Auth::user();
         $tab = $request->query('tab', 'children'); // 'children' or 'mothers'
         $search = $request->query('search');
@@ -33,6 +35,16 @@ class ImmunizationController extends Controller
             $childrenQuery->where(function ($q) use ($areaFilter) {
                 $q->where('area_id', $areaFilter)
                   ->orWhereHas('midwife', fn ($mq) => $mq->where('area_id', $areaFilter));
+            });
+        }
+
+        if ($user->role === 'mother') {
+            if (!$user->mother) abort(403, 'Your mother profile is not linked or incomplete. Please contact the administrator.');
+            $childrenQuery->where('mother_id', $user->mother->mother_id);
+        } elseif ($user->role === 'midwife' && $user->midwife) {
+            $childrenQuery->where(function($q) use ($user) {
+                $q->where('midwife_id', $user->midwife->midwife_id)
+                  ->orWhereHas('mother', fn ($mq) => $mq->where('midwife_id', $user->midwife->midwife_id));
             });
         }
 
@@ -110,6 +122,13 @@ class ImmunizationController extends Controller
             $mothersQuery->whereHas('midwife', fn ($mq) => $mq->where('area_id', $areaFilter));
         }
 
+        if ($user->role === 'mother') {
+            if (!$user->mother) abort(403, 'Your mother profile is not linked or incomplete. Please contact the administrator.');
+            $mothersQuery->where('mother_id', $user->mother->mother_id);
+        } elseif ($user->role === 'midwife' && $user->midwife) {
+            $mothersQuery->where('midwife_id', $user->midwife->midwife_id);
+        }
+
         if ($search && $tab === 'mothers') {
             $mothersQuery->where(function ($q) use ($search) {
                 $q->where('mother_name', 'like', "%{$search}%")
@@ -182,6 +201,8 @@ class ImmunizationController extends Controller
      */
     public function storeChildVaccine(Request $request)
     {
+        $this->authorize('create', Immunization::class);
+
         $validated = $request->validate([
             'child_id'          => 'required|exists:children,child_id',
             'vaccine_name'      => 'required|string|max:100',
@@ -227,6 +248,8 @@ class ImmunizationController extends Controller
      */
     public function storeMotherVaccine(Request $request)
     {
+        $this->authorize('create', Immunization::class);
+
         $validated = $request->validate([
             'mother_id'         => 'required|exists:mothers,mother_id',
             'batch_no'          => 'required|string|max:100',

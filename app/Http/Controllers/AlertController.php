@@ -10,11 +10,21 @@ class AlertController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+
         // 1. High Blood Pressure Alerts (from Family Health History)
-        $highBPMothers = FamilyHealthHistory::with(['mother.user', 'mother.midwife.area'])
+        $highBPQuery = FamilyHealthHistory::with(['mother.user', 'mother.midwife.area'])
             ->whereNotNull('high_blood_pressure')
-            ->whereNotIn('high_blood_pressure', ['no', 'No', 'false', '0', ''])
-            ->get()
+            ->whereNotIn('high_blood_pressure', ['no', 'No', 'false', '0', '']);
+
+        if ($user->role === 'mother') {
+            if (!$user->mother) abort(403, 'Your mother profile is not linked or incomplete. Please contact the administrator.');
+            $highBPQuery->where('mother_id', $user->mother->mother_id);
+        } elseif ($user->role === 'midwife' && $user->midwife) {
+            $highBPQuery->where('midwife_id', $user->midwife->midwife_id);
+        }
+
+        $highBPMothers = $highBPQuery->get()
             ->map(function ($history) {
                 return (object)[
                     'type' => 'High Blood Pressure',
@@ -30,9 +40,17 @@ class AlertController extends Controller
             });
 
         // 2. Low Haemoglobin Alerts (from Tests Done)
-        $lowHbMothers = TestDone::with(['mother.user', 'mother.midwife.area'])
-            ->where('Haemoglobin', '<', 11.0)
-            ->get()
+        $lowHbQuery = TestDone::with(['mother.user', 'mother.midwife.area'])
+            ->where('Haemoglobin', '<', 11.0);
+
+        if ($user->role === 'mother') {
+            if (!$user->mother) abort(403, 'Your mother profile is not linked or incomplete. Please contact the administrator.');
+            $lowHbQuery->where('mother_id', $user->mother->mother_id);
+        } elseif ($user->role === 'midwife' && $user->midwife) {
+            $lowHbQuery->whereHas('mother', fn($q) => $q->where('midwife_id', $user->midwife->midwife_id));
+        }
+
+        $lowHbMothers = $lowHbQuery->get()
             ->map(function ($test) {
                 return (object)[
                     'type' => 'Low Haemoglobin',
@@ -48,10 +66,20 @@ class AlertController extends Controller
             });
 
         // 3. High Blood Sugar Alerts (from Tests Done)
-        $highSugarMothers = TestDone::with(['mother.user', 'mother.midwife.area'])
-            ->where('urine_sugar_level', '!=', 'Negative')
-            ->orWhere('blood_sugar', 'like', '%high%')
-            ->get()
+        $highSugarQuery = TestDone::with(['mother.user', 'mother.midwife.area'])
+            ->where(function($q) {
+                $q->where('urine_sugar_level', '!=', 'Negative')
+                  ->orWhere('blood_sugar', 'like', '%high%');
+            });
+
+        if ($user->role === 'mother') {
+            if (!$user->mother) abort(403, 'Your mother profile is not linked or incomplete. Please contact the administrator.');
+            $highSugarQuery->where('mother_id', $user->mother->mother_id);
+        } elseif ($user->role === 'midwife' && $user->midwife) {
+            $highSugarQuery->whereHas('mother', fn($q) => $q->where('midwife_id', $user->midwife->midwife_id));
+        }
+
+        $highSugarMothers = $highSugarQuery->get()
             ->map(function ($test) {
                 return (object)[
                     'type' => 'High Blood/Urine Sugar',

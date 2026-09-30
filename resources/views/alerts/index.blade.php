@@ -226,32 +226,7 @@
 <body>
 
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <a href="{{ route('dashboard') }}" class="sidebar-brand">
-            <i class="fa-solid fa-leaf" style="color:#00c853;"></i>
-            <span>CareNest</span>
-        </a>
-        <ul class="sidebar-menu">
-            <li class="nav-item"><a href="{{ route('dashboard') }}"><i class="fa-solid fa-table-cells-large"></i><span>Dashboard</span></a></li>
-            <li class="nav-item"><a href="{{ route('mothers.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Mothers</span></a></li>
-            <li class="nav-item"><a href="{{ route('children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
-            <li class="nav-item"><a href="{{ route('immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
-            <li class="nav-item active"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
-
-            <li class="nav-item"><a href="#triposha"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
-            <li class="nav-item"><a href="#attendances"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
-            <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
-        </ul>
-        <div class="sidebar-footer">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Log Out</span>
-                </button>
-            </form>
-        </div>
-    </aside>
+    @include('partials.sidebar')
 
     <div class="main-wrapper">
     <!-- Header -->
