@@ -336,7 +336,7 @@
                     <span>Immunizations</span>
                 </a>
             </li>
-            <li class="nav-item"><a href="#alerts"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
+            <li class="nav-item"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
             <li class="nav-item"><a href="#lab-tests"><i class="fa-solid fa-vial-circle-check"></i><span>Lab Tests</span></a></li>
             <li class="nav-item"><a href="#triposha"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
             <li class="nav-item"><a href="#attendances"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
