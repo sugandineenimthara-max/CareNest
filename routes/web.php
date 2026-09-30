@@ -24,9 +24,6 @@ Route::post('/register/midwife', [AuthController::class, 'registerMidwife']);
 // Protected Routes
 Route::middleware('auth')->group(function () {
     
-    // -------------------------------------------------------------
-    // YOUR ROLE-BASED ROUTES (From main)
-    // -------------------------------------------------------------
     // Generic Dashboard Redirect to fix route('dashboard') references
     Route::get('/dashboard', function() {
         $user = \Illuminate\Support\Facades\Auth::user();
@@ -36,52 +33,89 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('login');
     })->name('dashboard');
 
-    // Role-based Dashboards (Currently all point to DashboardController, but protected by RoleMiddleware)
-    Route::middleware('role:provider')->get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::middleware('role:midwife')->get('/midwife/dashboard', [DashboardController::class, 'index'])->name('midwife.dashboard');
-    Route::middleware('role:mother')->get('/mother/dashboard', [DashboardController::class, 'index'])->name('mother.dashboard');
+    // Admin Group
+    Route::middleware('role:provider,admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Admin Midwife Approval
-    Route::middleware('role:provider')->get('/admin/midwife-requests', [\App\Http\Controllers\AdminController::class, 'midwifeRequests'])->name('admin.midwife-requests');
-    Route::middleware('role:provider')->post('/admin/midwife-requests/{id}/approve', [\App\Http\Controllers\AdminController::class, 'approveMidwife'])->name('admin.midwife.approve');
-    Route::middleware('role:provider')->post('/admin/midwife-requests/{id}/reject', [\App\Http\Controllers\AdminController::class, 'rejectMidwife'])->name('admin.midwife.reject');
+        Route::get('/midwife-requests', [\App\Http\Controllers\AdminController::class, 'midwifeRequests'])->name('midwife-requests.index');
+        Route::post('/midwife-requests/{id}/approve', [\App\Http\Controllers\AdminController::class, 'approveMidwife'])->name('midwife-requests.approve');
+        Route::post('/midwife-requests/{id}/reject', [\App\Http\Controllers\AdminController::class, 'rejectMidwife'])->name('midwife-requests.reject');
 
-    // Admin Manage Midwives
-    Route::middleware('role:provider')->get('/admin/midwives', [\App\Http\Controllers\AdminController::class, 'manageMidwives'])->name('admin.midwives.index');
-    Route::middleware('role:provider')->get('/admin/midwives/{id}/edit', [\App\Http\Controllers\AdminController::class, 'editMidwife'])->name('admin.midwives.edit');
-    Route::middleware('role:provider')->put('/admin/midwives/{id}', [\App\Http\Controllers\AdminController::class, 'updateMidwife'])->name('admin.midwives.update');
-    Route::middleware('role:provider')->delete('/admin/midwives/{id}', [\App\Http\Controllers\AdminController::class, 'deleteMidwife'])->name('admin.midwives.destroy');
+        Route::get('/midwives', [\App\Http\Controllers\AdminController::class, 'manageMidwives'])->name('midwives.index');
+        Route::get('/midwives/{id}/edit', [\App\Http\Controllers\AdminController::class, 'editMidwife'])->name('midwives.edit');
+        Route::put('/midwives/{id}', [\App\Http\Controllers\AdminController::class, 'updateMidwife'])->name('midwives.update');
+        Route::delete('/midwives/{id}', [\App\Http\Controllers\AdminController::class, 'deleteMidwife'])->name('midwives.destroy');
 
+        Route::get('/mothers', [MotherController::class, 'index'])->name('mothers.index');
+        Route::get('/mothers/create', [MotherController::class, 'create'])->name('mothers.create');
+        Route::post('/mothers', [MotherController::class, 'store'])->name('mothers.store');
+        Route::get('/mothers/{id}', [MotherController::class, 'show'])->name('mothers.show');
+        Route::get('/mothers/{id}/edit', [MotherController::class, 'edit'])->name('mothers.edit');
+        Route::put('/mothers/{id}', [MotherController::class, 'update'])->name('mothers.update');
 
-    // -------------------------------------------------------------
-    // YOUR TEAMMATE'S ROUTES (From feature/mother-management)
-    // -------------------------------------------------------------
-    // Mothers
-    Route::get('/mothers', [MotherController::class, 'index'])->name('mothers.index');
-    Route::get('/mothers/create', [MotherController::class, 'create'])->name('mothers.create');
-    Route::post('/mothers', [MotherController::class, 'store'])->name('mothers.store');
-    Route::get('/mothers/{id}', [MotherController::class, 'show'])->name('mothers.show');
-    Route::get('/mothers/{id}/edit', [MotherController::class, 'edit'])->name('mothers.edit');
-    Route::put('/mothers/{id}', [MotherController::class, 'update'])->name('mothers.update');
+        Route::get('/children', [\App\Http\Controllers\ChildController::class, 'index'])->name('children.index');
+        Route::get('/children/create', [\App\Http\Controllers\ChildController::class, 'create'])->name('children.create');
+        Route::post('/children', [\App\Http\Controllers\ChildController::class, 'store'])->name('children.store');
+        Route::get('/children/{id}', [\App\Http\Controllers\ChildController::class, 'show'])->name('children.show');
+        Route::get('/children/{id}/edit', [\App\Http\Controllers\ChildController::class, 'edit'])->name('children.edit');
+        Route::put('/children/{id}', [\App\Http\Controllers\ChildController::class, 'update'])->name('children.update');
+        Route::delete('/children/{id}', [\App\Http\Controllers\ChildController::class, 'destroy'])->name('children.destroy');
 
-    // Children
-    Route::get('/children', [\App\Http\Controllers\ChildController::class, 'index'])->name('children.index');
-    Route::get('/children/create', [\App\Http\Controllers\ChildController::class, 'create'])->name('children.create');
-    Route::post('/children', [\App\Http\Controllers\ChildController::class, 'store'])->name('children.store');
-    Route::get('/children/{id}', [\App\Http\Controllers\ChildController::class, 'show'])->name('children.show');
-    Route::get('/children/{id}/edit', [\App\Http\Controllers\ChildController::class, 'edit'])->name('children.edit');
-    Route::put('/children/{id}', [\App\Http\Controllers\ChildController::class, 'update'])->name('children.update');
-    Route::delete('/children/{id}', [\App\Http\Controllers\ChildController::class, 'destroy'])->name('children.destroy');
+        Route::get('/immunizations', [\App\Http\Controllers\ImmunizationController::class, 'index'])->name('immunizations.index');
+        Route::post('/immunizations/child', [\App\Http\Controllers\ImmunizationController::class, 'storeChildVaccine'])->name('immunizations.child.store');
+        Route::post('/immunizations/mother', [\App\Http\Controllers\ImmunizationController::class, 'storeMotherVaccine'])->name('immunizations.mother.store');
 
-    // Immunizations
-    Route::get('/immunizations', [\App\Http\Controllers\ImmunizationController::class, 'index'])->name('immunizations.index');
-    Route::post('/immunizations/child', [\App\Http\Controllers\ImmunizationController::class, 'storeChildVaccine'])->name('immunizations.child.store');
-    Route::post('/immunizations/mother', [\App\Http\Controllers\ImmunizationController::class, 'storeMotherVaccine'])->name('immunizations.mother.store');
-    // High-Risk Alerts
-    Route::get('/alerts', [\App\Http\Controllers\AlertController::class, 'index'])->name('alerts.index');
+        Route::get('/alerts', [\App\Http\Controllers\AlertController::class, 'index'])->name('alerts.index');
 
-    // Thriposha Book
-    Route::get('/triposha', [\App\Http\Controllers\TriposhaBookController::class, 'index'])->name('triposha.index');
-    Route::post('/triposha/batch', [\App\Http\Controllers\TriposhaBookController::class, 'storeBatch'])->name('triposha.store.batch');
-    Route::delete('/triposha/{id}', [\App\Http\Controllers\TriposhaBookController::class, 'destroy'])->name('triposha.destroy');
+        // Thriposha Book
+        Route::get('/triposha', [\App\Http\Controllers\TriposhaBookController::class, 'index'])->name('triposha.index');
+        Route::post('/triposha/batch', [\App\Http\Controllers\TriposhaBookController::class, 'storeBatch'])->name('triposha.store.batch');
+        Route::delete('/triposha/{id}', [\App\Http\Controllers\TriposhaBookController::class, 'destroy'])->name('triposha.destroy');
+    });
+
+    // Midwife Group
+    Route::middleware('role:midwife')->prefix('midwife')->name('midwife.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/mothers', [MotherController::class, 'index'])->name('mothers.index');
+        Route::get('/mothers/create', [MotherController::class, 'create'])->name('mothers.create');
+        Route::post('/mothers', [MotherController::class, 'store'])->name('mothers.store');
+        Route::get('/mothers/{id}', [MotherController::class, 'show'])->name('mothers.show');
+        Route::get('/mothers/{id}/edit', [MotherController::class, 'edit'])->name('mothers.edit');
+        Route::put('/mothers/{id}', [MotherController::class, 'update'])->name('mothers.update');
+
+        Route::get('/children', [\App\Http\Controllers\ChildController::class, 'index'])->name('children.index');
+        Route::get('/children/create', [\App\Http\Controllers\ChildController::class, 'create'])->name('children.create');
+        Route::post('/children', [\App\Http\Controllers\ChildController::class, 'store'])->name('children.store');
+        Route::get('/children/{id}', [\App\Http\Controllers\ChildController::class, 'show'])->name('children.show');
+        Route::get('/children/{id}/edit', [\App\Http\Controllers\ChildController::class, 'edit'])->name('children.edit');
+        Route::put('/children/{id}', [\App\Http\Controllers\ChildController::class, 'update'])->name('children.update');
+
+        Route::get('/immunizations', [\App\Http\Controllers\ImmunizationController::class, 'index'])->name('immunizations.index');
+        Route::post('/immunizations/child', [\App\Http\Controllers\ImmunizationController::class, 'storeChildVaccine'])->name('immunizations.child.store');
+        Route::post('/immunizations/mother', [\App\Http\Controllers\ImmunizationController::class, 'storeMotherVaccine'])->name('immunizations.mother.store');
+
+        Route::get('/alerts', [\App\Http\Controllers\AlertController::class, 'index'])->name('alerts.index');
+
+        // Thriposha Book
+        Route::get('/triposha', [\App\Http\Controllers\TriposhaBookController::class, 'index'])->name('triposha.index');
+        Route::post('/triposha/batch', [\App\Http\Controllers\TriposhaBookController::class, 'storeBatch'])->name('triposha.store.batch');
+        Route::delete('/triposha/{id}', [\App\Http\Controllers\TriposhaBookController::class, 'destroy'])->name('triposha.destroy');
+    });
+
+    // Mother Group
+    Route::middleware('role:mother')->prefix('mother')->name('mother.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        
+        Route::get('/profile', [MotherController::class, 'profile'])->name('profile');
+        Route::get('/mothers/{id}', [MotherController::class, 'show'])->name('mothers.show');
+        Route::put('/mothers/{id}', [MotherController::class, 'update'])->name('mothers.update');
+
+        Route::get('/children', [\App\Http\Controllers\ChildController::class, 'index'])->name('children.index');
+        Route::get('/children/{id}', [\App\Http\Controllers\ChildController::class, 'show'])->name('children.show');
+
+        Route::get('/immunizations', [\App\Http\Controllers\ImmunizationController::class, 'index'])->name('immunizations.index');
+        
+        Route::get('/notifications', [\App\Http\Controllers\AlertController::class, 'index'])->name('notifications.index');
+    });
 });

@@ -267,55 +267,28 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <a href="{{ route('dashboard') }}" class="sidebar-brand">
-            <i class="fa-solid fa-leaf" style="color:#00c853;"></i>
-            <span>CareNest</span>
-        </a>
-        <ul class="sidebar-menu">
-            <li class="nav-item"><a href="{{ route('dashboard') }}"><i class="fa-solid fa-table-cells-large"></i><span>Dashboard</span></a></li>
-            @if(Auth::check() && (Auth::user()->role === 'provider' || Auth::user()->role === 'admin'))
-            <li class="nav-item"><a href="{{ route('admin.midwife-requests') }}"><i class="fa-solid fa-user-check"></i><span>Midwife Requests</span></a></li>
-            <li class="nav-item"><a href="{{ route('admin.midwives.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Manage Midwives</span></a></li>
-            @endif
-            <li class="nav-item"><a href="{{ route('mothers.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Mothers</span></a></li>
-            <li class="nav-item active"><a href="{{ route('children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
-            <li class="nav-item"><a href="{{ route('immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
-            <li class="nav-item"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
-            <li class="nav-item"><a href="#lab-tests"><i class="fa-solid fa-vial-circle-check"></i><span>Lab Tests</span></a></li>
-            <li class="nav-item"><a href="{{ route('triposha.index') }}"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
-            <li class="nav-item"><a href="#attendances"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
-            <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
-        </ul>
-        <div class="sidebar-footer">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Log Out</span>
-                </button>
-            </form>
-        </div>
-    </aside>
+    @include('partials.sidebar')
 
     <!-- Main Content -->
     <div class="main-wrapper">
         <header class="top-header">
             <div class="header-left">
-                <a href="{{ route('children.index') }}" class="back-btn" title="Back to Children">
+                <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'children.index') }}" class="back-btn" title="Back to Children">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
                 <span>Child Profile &amp; Immunization</span>
             </div>
             <div class="header-actions">
-                <a href="{{ route('children.edit', $child->child_id) }}" class="btn-action btn-edit">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    <span>Edit Child</span>
-                </a>
-                <button type="button" class="btn-action btn-record-vaccine" onclick="openVaccineModal('', '')">
-                    <i class="fa-solid fa-syringe"></i>
-                    <span>Record Vaccine Dose</span>
-                </button>
+                @if(auth()->user()->role !== 'mother')
+                    <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : 'admin.') . 'children.edit', $child->child_id) }}" class="btn-action btn-edit">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Edit Child</span>
+                    </a>
+                    <button type="button" class="btn-action btn-record-vaccine" onclick="openVaccineModal('', '')">
+                        <i class="fa-solid fa-syringe"></i>
+                        <span>Record Vaccine Dose</span>
+                    </button>
+                @endif
             </div>
         </header>
 
@@ -395,7 +368,7 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('mothers.show', $child->mother_id) }}" class="btn-view-mother">
+                            <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'mothers.show', $child->mother_id) }}" class="btn-view-mother">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                                 <span>Open Full Mother Profile</span>
                             </a>
@@ -450,9 +423,11 @@
                                     Track required milestones from birth up to 5 years (Sri Lanka MOH EPI protocol)
                                 </p>
                             </div>
-                            <button type="button" class="btn-action btn-record-vaccine" onclick="openVaccineModal('', '')">
-                                <i class="fa-solid fa-plus"></i> Record Dose
-                            </button>
+                            @if(auth()->user()->role !== 'mother')
+                                <button type="button" class="btn-action btn-record-vaccine" onclick="openVaccineModal('', '')">
+                                    <i class="fa-solid fa-plus"></i> Record Dose
+                                </button>
+                            @endif
                         </div>
 
                         <!-- Progress Bar -->
@@ -510,27 +485,33 @@
                                             <div>
                                                 <span class="badge-status status-overdue">Overdue</span>
                                                 <div style="margin-top:4px;">
-                                                    <button type="button" class="btn-log-dose" onclick="openVaccineModal('{{ $item['vaccine_name'] }}', '{{ $item['dose'] }}')">
-                                                        <i class="fa-solid fa-syringe"></i> Record Now
-                                                    </button>
+                                                    @if(auth()->user()->role !== 'mother')
+                                                        <button type="button" class="btn-log-dose" onclick="openVaccineModal('{{ $item['vaccine_name'] }}', '{{ $item['dose'] }}')">
+                                                            <i class="fa-solid fa-syringe"></i> Record Now
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
                                         @elseif($item['status'] === 'Due Now')
                                             <div>
                                                 <span class="badge-status status-due">Due Now</span>
                                                 <div style="margin-top:4px;">
-                                                    <button type="button" class="btn-log-dose" onclick="openVaccineModal('{{ $item['vaccine_name'] }}', '{{ $item['dose'] }}')">
-                                                        <i class="fa-solid fa-syringe"></i> Record
-                                                    </button>
+                                                    @if(auth()->user()->role !== 'mother')
+                                                        <button type="button" class="btn-log-dose" onclick="openVaccineModal('{{ $item['vaccine_name'] }}', '{{ $item['dose'] }}')">
+                                                            <i class="fa-solid fa-syringe"></i> Record
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
                                         @else
                                             <div>
                                                 <span class="badge-status status-upcoming">Due ~ {{ \Carbon\Carbon::parse($item['due_date'])->format('M Y') }}</span>
                                                 <div style="margin-top:4px;">
-                                                    <button type="button" class="btn-log-dose" style="background:#64748b;" onclick="openVaccineModal('{{ $item['vaccine_name'] }}', '{{ $item['dose'] }}')">
-                                                        Log Early
-                                                    </button>
+                                                    @if(auth()->user()->role !== 'mother')
+                                                        <button type="button" class="btn-log-dose" style="background:#64748b;" onclick="openVaccineModal('{{ $item['vaccine_name'] }}', '{{ $item['dose'] }}')">
+                                                            Log Early
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
                                         @endif
@@ -551,7 +532,7 @@
                 <h3 class="modal-title"><i class="fa-solid fa-syringe" style="color:#00c853;"></i> Record Vaccine Dose</h3>
                 <button type="button" class="close-btn" onclick="closeVaccineModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form action="{{ route('immunizations.child.store') }}" method="POST">
+            <form action="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'immunizations.child.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="child_id" value="{{ $child->child_id }}">
 

@@ -106,42 +106,24 @@
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <a href="{{ route('dashboard') }}" class="sidebar-brand"><i class="fa-solid fa-leaf" style="color:#00c853;"></i><span>CareNest</span></a>
-        <ul class="sidebar-menu">
-            <li class="nav-item"><a href="{{ route('dashboard') }}"><i class="fa-solid fa-table-cells-large"></i><span>Dashboard</span></a></li>
-            @if(Auth::check() && (Auth::user()->role === 'provider' || Auth::user()->role === 'admin'))
-            <li class="nav-item"><a href="{{ route('admin.midwife-requests') }}"><i class="fa-solid fa-user-check"></i><span>Midwife Requests</span></a></li>
-            <li class="nav-item"><a href="{{ route('admin.midwives.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Manage Midwives</span></a></li>
-            @endif
-            <li class="nav-item active"><a href="{{ route('mothers.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Mothers</span></a></li>
-            <li class="nav-item"><a href="{{ route('children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
-            <li class="nav-item"><a href="{{ route('immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
-            <li class="nav-item"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
-
-
-            <li class="nav-item"><a href="{{ route('triposha.index') }}"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
-            <li class="nav-item"><a href="#attendances"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
-            <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
-        </ul>
-        <div class="sidebar-footer">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span></button>
-            </form>
-        </div>
-    </aside>
+    @include('partials.sidebar')
 
     <div class="main-wrapper">
         <header class="top-header">
             <div class="header-left">
-                <a href="{{ route('mothers.index') }}" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+                @if(auth()->user()->role === 'mother')
+                    <a href="{{ route('mother.dashboard') }}" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+                @else
+                    <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : 'admin.') . 'mothers.index') }}" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+                @endif
                 Mother Profile
             </div>
             <div class="header-right">
-                <a href="{{ route('mothers.edit', $mother->mother_id) }}" class="edit-btn">
-                    <i class="fa-solid fa-pen"></i> Edit Record
-                </a>
+                @if(auth()->user()->role !== 'mother')
+                    <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : 'admin.') . 'mothers.edit', $mother->mother_id) }}" class="edit-btn">
+                        <i class="fa-solid fa-pen"></i> Edit Record
+                    </a>
+                @endif
                 <div class="user-badge-container">
                     <span class="user-role-label">{{ ucfirst($user->role ?? 'Admin') }}</span>
                     <div class="user-avatar"><i class="fa-regular fa-user"></i></div>

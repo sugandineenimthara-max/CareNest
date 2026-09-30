@@ -17,6 +17,8 @@
         :root {
             --font-main: 'Plus Jakarta Sans', sans-serif;
             --font-heading: 'Outfit', sans-serif;
+            --sidebar-width: 260px;
+            --text-dark: #1e293b;
             --bg-gradient: linear-gradient(135deg, #eef2ff 0%, #f0fdf4 50%, #f0f9ff 100%);
         }
 
@@ -30,11 +32,47 @@
             font-family: var(--font-main);
             background: var(--bg-gradient);
             background-attachment: fixed;
-            color: #1e293b;
+            color: var(--text-dark);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
         }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(226, 232, 240, 0.8);
+            display: flex; flex-direction: column;
+            padding: 30px 20px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex; align-items: center; gap: 10px;
+            font-family: var(--font-heading); font-size: 24px; font-weight: 800;
+            color: #1b4d3e; text-decoration: none; margin-bottom: 36px; padding-left: 10px;
+        }
+        .sidebar-menu { list-style: none; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
+        .nav-item a {
+            display: flex; align-items: center; gap: 14px; padding: 12px 18px;
+            border-radius: 16px; font-size: 14px; font-weight: 600; color: #64748b;
+            text-decoration: none; transition: all 0.25s ease;
+        }
+        .nav-item a:hover { background: #f1f5f9; color: var(--text-dark); }
+        .nav-item.active a {
+            background: linear-gradient(135deg, #1b5e20 0%, #00695c 100%);
+            color: #ffffff; box-shadow: 0 8px 20px rgba(27, 94, 32, 0.25);
+        }
+        .nav-item i { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar-footer { margin-top: 20px; }
+        .logout-btn {
+            display: flex; align-items: center; gap: 10px; background: transparent; border: none;
+            padding: 10px 18px; font-family: var(--font-main); font-size: 14px; font-weight: 600;
+            color: #64748b; cursor: pointer; width: 100%;
+        }
+        .logout-btn:hover { color: #ef4444; }
+
+        /* Main */
+        .main-wrapper { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
 
         /* Top Header */
         .top-header {
@@ -189,10 +227,28 @@
         }
         .btn-delete:hover { background: #ffe4e6; }
 
+        .btn-approve {
+            background: #10b981;
+            color: white;
+        }
+        .btn-approve:hover { background: #059669; transform: translateY(-1px); }
+
+        .btn-reject {
+            background: #fff1f2;
+            color: #e11d48;
+            border: 1px solid #fecdd3;
+        }
+        .btn-reject:hover { background: #ffe4e6; }
+
+
     </style>
 </head>
 <body>
 
+    <!-- Sidebar -->
+    @include('partials.sidebar')
+
+    <div class="main-wrapper">
     <!-- Header -->
     <header class="top-header">
         <a href="{{ route('admin.dashboard') }}" class="brand-logo">
@@ -205,8 +261,8 @@
 
     <!-- Main Content -->
     <main class="content-container">
-        <h1 class="page-title">Manage Midwives</h1>
-        <p class="page-subtitle">View, edit, and remove approved midwives from the system.</p>
+        <h1 class="page-title">Midwife Management</h1>
+        <p class="page-subtitle">Review new registrations, and manage approved midwives from the system.</p>
 
         @if(session('success'))
             <div class="alert-success">
@@ -215,6 +271,56 @@
             </div>
         @endif
 
+        <h2 style="font-family: var(--font-heading); font-size: 22px; color: #0f172a; margin-bottom: 16px;">Pending Registrations</h2>
+        <div class="table-card" style="margin-bottom: 40px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Midwife Name</th>
+                        <th>Email Address</th>
+                        <th>Assigned Area</th>
+                        <th>Requested On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($pendingRequests as $request)
+                        <tr>
+                            <td class="name-cell">{{ $request->name }}</td>
+                            <td>{{ $request->email }}</td>
+                            <td>
+                                <i class="fa-solid fa-location-dot" style="color: #00c853; margin-right: 6px;"></i>
+                                {{ $request->midwife->area->area_name ?? 'N/A' }}
+                            </td>
+                            <td>{{ $request->created_at->format('M d, Y') }}<br><span style="color:#94a3b8; font-size: 12px;">{{ $request->created_at->format('h:i A') }}</span></td>
+                            <td>
+                                <form action="{{ route('admin.midwife.approve', $request->id) }}" method="POST" class="action-form">
+                                    @csrf
+                                    <button type="submit" class="btn-action btn-approve">
+                                        <i class="fa-solid fa-check"></i> Approve
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.midwife.reject', $request->id) }}" method="POST" class="action-form">
+                                    @csrf
+                                    <button type="submit" class="btn-action btn-reject" onclick="return confirm('Are you sure you want to reject this request?');">
+                                        <i class="fa-solid fa-xmark"></i> Reject
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">
+                                <i class="fa-regular fa-folder-open" style="font-size: 32px; color: #cbd5e1; margin-bottom: 12px; display: block;"></i>
+                                No pending registration requests found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <h2 style="font-family: var(--font-heading); font-size: 22px; color: #0f172a; margin-bottom: 16px;">Approved Midwives</h2>
         <div class="table-card">
             <table>
                 <thead>
@@ -262,6 +368,7 @@
             </table>
         </div>
     </main>
+    </div>
 
 </body>
 </html>
