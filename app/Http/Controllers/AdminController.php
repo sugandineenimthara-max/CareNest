@@ -43,12 +43,16 @@ class AdminController extends Controller
 
     public function manageMidwives()
     {
-        // Only get approved midwives for management, or all midwives. Let's get approved ones.
+        $pendingRequests = User::where('role', 'midwife')
+                    ->where('status', 'pending')
+                    ->with('midwife.area')
+                    ->get();
+
         $midwives = User::where('role', 'midwife')
                     ->where('status', 'approved')
                     ->with('midwife.area')
                     ->get();
-        return view('admin.midwives.index', compact('midwives'));
+        return view('admin.midwives.index', compact('midwives', 'pendingRequests'));
     }
 
     public function editMidwife($id)
