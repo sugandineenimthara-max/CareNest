@@ -458,11 +458,11 @@
             <!-- Area Filter Pills -->
             <div class="area-pills">
                 <span class="pill-label"><i class="fa-solid fa-filter"></i> Filter Area:</span>
-                <a href="{{ route('children.index', array_filter(['search' => $search])) }}" class="area-pill {{ empty($areaFilter) ? 'active' : '' }}">
+                <a href="{{ route('admin.children.index', array_filter(['search' => $search])) }}" class="area-pill {{ empty($areaFilter) ? 'active' : '' }}">
                     All Areas ({{ $totalChildren }})
                 </a>
                 @foreach($allAreas as $a)
-                    <a href="{{ route('children.index', array_filter(['area_id' => $a->area_id, 'search' => $search])) }}" class="area-pill {{ $areaFilter == $a->area_id ? 'active' : '' }}">
+                    <a href="{{ route('admin.children.index', array_filter(['area_id' => $a->area_id, 'search' => $search])) }}" class="area-pill {{ $areaFilter == $a->area_id ? 'active' : '' }}">
                         {{ $a->area_name }}
                     </a>
                 @endforeach
@@ -594,7 +594,7 @@
                             <i class="fa-solid fa-baby-carriage" style="font-size:32px; color:#cbd5e1; margin-bottom:8px; display:block;"></i>
                             No children currently registered in {{ $area->area_name }}.
                             <div style="margin-top:10px;">
-                                <a href="{{ route('children.create', ['area_id' => $area->area_id]) }}" style="color:#00c853; font-weight:700; text-decoration:none;">
+                                <a href="{{ route('admin.children.create', ['area_id' => $area->area_id]) }}" style="color:#00c853; font-weight:700; text-decoration:none;">
                                     + Register first child in this area
                                 </a>
                             </div>

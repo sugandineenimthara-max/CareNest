@@ -286,11 +286,11 @@
 
             <!-- SEPARATED TABS FOR MOTHER AND CHILD VACCINATION (REQUIRED) -->
             <div class="tab-switcher-card">
-                <a href="{{ route('immunizations.index', ['tab' => 'children']) }}" class="tab-btn {{ $tab === 'children' ? 'active' : '' }}">
+                <a href="{{ route('admin.immunizations.index', ['tab' => 'children']) }}" class="tab-btn {{ $tab === 'children' ? 'active' : '' }}">
                     <i class="fa-solid fa-baby"></i>
                     <span>Children Immunization</span>
                 </a>
-                <a href="{{ route('immunizations.index', ['tab' => 'mothers']) }}" class="tab-btn {{ $tab === 'mothers' ? 'active' : '' }}">
+                <a href="{{ route('admin.immunizations.index', ['tab' => 'mothers']) }}" class="tab-btn {{ $tab === 'mothers' ? 'active' : '' }}">
                     <i class="fa-solid fa-person-breastfeeding"></i>
                     <span>Mother Vaccination (Tetanus)</span>
                 </a>

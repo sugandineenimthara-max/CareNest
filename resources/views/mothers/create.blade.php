@@ -278,7 +278,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('mothers.store') }}" method="POST" id="motherRegistrationForm">
+            <form action="{{ route('admin.mothers.store') }}" method="POST" id="motherRegistrationForm">
                 @csrf
 
                 <!-- ============ SECTION 1: Personal Details ============ -->
