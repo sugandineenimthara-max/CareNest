@@ -88,34 +88,47 @@
             z-index: 90;
         }
 
-        .brand-logo {
+        .header-left {
             font-family: var(--font-heading);
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
             color: #1b4d3e;
-            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-badge-container {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .btn-back {
-            background: #f1f5f9;
-            color: #475569;
-            padding: 10px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
+        .user-role-label {
+            font-size: 13px;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
+            color: #334155;
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 20px;
         }
 
-        .btn-back:hover {
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
             background: #e2e8f0;
-            color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            font-size: 16px;
         }
 
         /* Content Container */
@@ -243,7 +256,7 @@
             <li class="nav-item active"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
 
             <li class="nav-item"><a href="{{ route('triposha.index') }}"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
-            <li class="nav-item"><a href="#attendances"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
+            <li class="nav-item"><a href="{{ route('attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
             <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
         </ul>
         <div class="sidebar-footer">
@@ -260,12 +273,17 @@
     <div class="main-wrapper">
     <!-- Header -->
     <header class="top-header">
-        <a href="{{ route('dashboard') }}" class="brand-logo">
-            <i class="fa-solid fa-leaf" style="color: #00c853;"></i> CareNest
-        </a>
-        <a href="{{ route('dashboard') }}" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
-        </a>
+        <div class="header-left">
+            <span>High-Risk Alerts</span>
+        </div>
+        <div class="header-right">
+            <div class="user-badge-container">
+                <span class="user-role-label">{{ ucfirst(Auth::user()->role ?? 'Admin') }}</span>
+                <div class="user-avatar">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- Main Content -->

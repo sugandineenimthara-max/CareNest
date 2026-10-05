@@ -257,8 +257,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding-left: 12px;
-            border-left: 1px solid #e2e8f0;
         }
 
         .user-role-label {
@@ -625,7 +623,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#attendances">
+                <a href="{{ route('attendances.index') }}">
                     <i class="fa-solid fa-calendar-check"></i>
                     <span>Clinic Attendances</span>
                 </a>
@@ -663,18 +661,8 @@
                 CareNest
             </div>
 
-            <!-- Search Bar -->
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" class="search-input" placeholder="Search records...">
-            </div>
-
-            <!-- Right Profile Badge & Settings -->
+            <!-- Right Profile Badge -->
             <div class="header-right">
-                <button class="icon-btn" title="Settings">
-                    <i class="fa-solid fa-gear"></i>
-                </button>
-
                 <div class="user-badge-container">
                     <span class="user-role-label">{{ ucfirst($user->role ?? 'Admin') }}</span>
                     <div class="user-avatar">

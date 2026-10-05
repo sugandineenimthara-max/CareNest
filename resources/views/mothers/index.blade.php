@@ -326,7 +326,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#attendances">
+                <a href="{{ route('attendances.index') }}">
                     <i class="fa-solid fa-calendar-check"></i>
                     <span>Clinic Attendances</span>
                 </a>

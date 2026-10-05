@@ -84,4 +84,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/triposha', [\App\Http\Controllers\TriposhaBookController::class, 'index'])->name('triposha.index');
     Route::post('/triposha/batch', [\App\Http\Controllers\TriposhaBookController::class, 'storeBatch'])->name('triposha.store.batch');
     Route::delete('/triposha/{id}', [\App\Http\Controllers\TriposhaBookController::class, 'destroy'])->name('triposha.destroy');
+
+    // Clinic Attendances
+    Route::get('/attendances', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendances.index');
+    Route::post('/attendances/batch', [\App\Http\Controllers\AttendanceController::class, 'storeBatch'])->name('attendances.store.batch');
+    Route::delete('/attendances/{id}', [\App\Http\Controllers\AttendanceController::class, 'destroy'])->name('attendances.destroy');
 });
