@@ -306,14 +306,77 @@
 </head>
 <body>
     <!-- Sidebar -->
-    @include('partials.sidebar')
+    <aside class="sidebar">
+        <a href="{{ route('dashboard') }}" class="sidebar-brand">
+            <i class="fa-solid fa-leaf" style="color:#00c853;"></i>
+            <span>CareNest</span>
+        </a>
+        <ul class="sidebar-menu">
+            <li class="nav-item">
+                <a href="{{ route('dashboard') }}">
+                    <i class="fa-solid fa-table-cells-large"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            @if(Auth::check() && (Auth::user()->role === 'provider' || Auth::user()->role === 'admin'))
+            <li class="nav-item">
+                <a href="{{ route('admin.midwife-requests') }}">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Midwife Requests</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('admin.midwives.index') }}">
+                    <i class="fa-solid fa-user-nurse"></i>
+                    <span>Manage Midwives</span>
+                </a>
+            </li>
+            @endif
+            <li class="nav-item">
+                <a href="{{ route('mothers.index') }}">
+                    <i class="fa-solid fa-user-nurse"></i>
+                    <span>Mothers</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a href="{{ route('children.index') }}">
+                    <i class="fa-solid fa-baby"></i>
+                    <span>Children</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('immunizations.index') }}">
+                    <i class="fa-solid fa-syringe"></i>
+                    <span>Immunizations</span>
+                </a>
+            </li>
+            <li class="nav-item"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
+            <li class="nav-item"><a href="#lab-tests"><i class="fa-solid fa-vial-circle-check"></i><span>Lab Tests</span></a></li>
+            <li class="nav-item"><a href="{{ route('triposha.index') }}"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
+            <li class="nav-item"><a href="{{ route('attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
+            <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="{{ route('children.create') }}" class="btn-schedule">
+                <i class="fa-solid fa-plus"></i>
+                <span>Register Child</span>
+            </a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-btn">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Log Out</span>
+                </button>
+            </form>
+        </div>
+    </aside>
 
     <!-- Main Content -->
     <div class="main-wrapper">
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-left">Children Management</div>
-            <form method="GET" action="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'children.index') }}" class="search-box">
+            <form method="GET" action="{{ route('children.index') }}" class="search-box">
                 @if(request('area_id'))
                     <input type="hidden" name="area_id" value="{{ request('area_id') }}">
                 @endif
@@ -349,11 +412,11 @@
                     </h1>
                 </div>
                 <div style="display:flex; gap:12px;">
-                    <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'immunizations.index') }}" class="btn-register" style="background:white; color:#1b4d3e; border:1px solid #cbd5e1; box-shadow:none;">
+                    <a href="{{ route('immunizations.index') }}" class="btn-register" style="background:white; color:#1b4d3e; border:1px solid #cbd5e1; box-shadow:none;">
                         <i class="fa-solid fa-syringe" style="color:#00c853;"></i>
                         <span>Immunization Schedule</span>
                     </a>
-                    <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'children.create') }}" class="btn-register">
+                    <a href="{{ route('children.create') }}" class="btn-register">
                         <i class="fa-solid fa-plus"></i>
                         <span>Register New Child</span>
                     </a>
@@ -395,11 +458,11 @@
             <!-- Area Filter Pills -->
             <div class="area-pills">
                 <span class="pill-label"><i class="fa-solid fa-filter"></i> Filter Area:</span>
-                <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'children.index', array_filter(['search' => $search])) }}" class="area-pill {{ empty($areaFilter) ? 'active' : '' }}">
+                <a href="{{ route('children.index', array_filter(['search' => $search])) }}" class="area-pill {{ empty($areaFilter) ? 'active' : '' }}">
                     All Areas ({{ $totalChildren }})
                 </a>
                 @foreach($allAreas as $a)
-                    <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'children.index', array_filter(['area_id' => $a->area_id, 'search' => $search])) }}" class="area-pill {{ $areaFilter == $a->area_id ? 'active' : '' }}">
+                    <a href="{{ route('children.index', array_filter(['area_id' => $a->area_id, 'search' => $search])) }}" class="area-pill {{ $areaFilter == $a->area_id ? 'active' : '' }}">
                         {{ $a->area_name }}
                     </a>
                 @endforeach
@@ -408,7 +471,7 @@
             @if($search)
                 <div style="font-size:14px; color:#64748b;">
                     Showing search results for "<strong>{{ $search }}</strong>" —
-                    <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'children.index') }}" style="color:#00c853; font-weight:700;">Clear search</a>
+                    <a href="{{ route('children.index') }}" style="color:#00c853; font-weight:700;">Clear search</a>
                 </div>
             @endif
 
@@ -507,7 +570,7 @@
                                             </div>
                                         </div>
                                         @if($child->mother)
-                                            <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'mothers.show', $child->mother_id) }}" class="mother-view-link" title="View Mother Profile">
+                                            <a href="{{ route('mothers.show', $child->mother_id) }}" class="mother-view-link" title="View Mother Profile">
                                                 <span>Profile</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
                                             </a>
                                         @endif
@@ -515,10 +578,10 @@
 
                                     <!-- Footer Actions -->
                                     <div class="child-footer">
-                                        <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'children.edit', $child->child_id) }}" class="btn-edit-child">
+                                        <a href="{{ route('children.edit', $child->child_id) }}" class="btn-edit-child">
                                             <i class="fa-solid fa-pen-to-square"></i> Edit
                                         </a>
-                                        <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'children.show', $child->child_id) }}" class="btn-view-child">
+                                        <a href="{{ route('children.show', $child->child_id) }}" class="btn-view-child">
                                             <span>View Immunization Schedule</span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </a>
@@ -531,7 +594,7 @@
                             <i class="fa-solid fa-baby-carriage" style="font-size:32px; color:#cbd5e1; margin-bottom:8px; display:block;"></i>
                             No children currently registered in {{ $area->area_name }}.
                             <div style="margin-top:10px;">
-                                <a href="{{ route((auth()->user()->role === 'midwife' ? 'midwife.' : (auth()->user()->role === 'mother' ? 'mother.' : 'admin.')) . 'children.create', ['area_id' => $area->area_id]) }}" style="color:#00c853; font-weight:700; text-decoration:none;">
+                                <a href="{{ route('children.create', ['area_id' => $area->area_id]) }}" style="color:#00c853; font-weight:700; text-decoration:none;">
                                     + Register first child in this area
                                 </a>
                             </div>

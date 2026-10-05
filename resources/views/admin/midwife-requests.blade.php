@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Midwives - CareNest</title>
+    <title>Midwife Requests - CareNest</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +39,7 @@
             font-family: var(--font-main);
             background: var(--bg-gradient);
             background-attachment: fixed;
-            color: var(--text-dark);
+            color: #1e293b;
             min-height: 100vh;
             display: flex;
         }
@@ -285,6 +285,22 @@
             color: #0f172a;
         }
 
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+        .status-approved { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .status-rejected { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
         .action-form {
             display: inline-block;
             margin-right: 8px;
@@ -301,22 +317,20 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            text-decoration: none;
         }
 
-        .btn-edit {
-            background: #e0f2fe;
-            color: #0284c7;
-            border: 1px solid #bae6fd;
+        .btn-approve {
+            background: #10b981;
+            color: white;
         }
-        .btn-edit:hover { background: #bae6fd; }
+        .btn-approve:hover { background: #059669; transform: translateY(-1px); }
 
-        .btn-delete {
+        .btn-reject {
             background: #fff1f2;
             color: #e11d48;
             border: 1px solid #fecdd3;
         }
-        .btn-delete:hover { background: #ffe4e6; }
+        .btn-reject:hover { background: #ffe4e6; }
 
         @media (max-width: 1024px) {
             .sidebar { width: 80px; padding: 20px 10px; }
@@ -344,13 +358,13 @@
                 </a>
             </li>
             @if(Auth::check() && (Auth::user()->role === 'provider' || Auth::user()->role === 'admin'))
-            <li class="nav-item {{ request()->routeIs('admin.midwife-requests*') ? 'active' : '' }}">
+            <li class="nav-item active">
                 <a href="{{ route('admin.midwife-requests') }}">
                     <i class="fa-solid fa-user-check"></i>
                     <span>Midwife Requests</span>
                 </a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item {{ request()->routeIs('admin.midwives.*') ? 'active' : '' }}">
                 <a href="{{ route('admin.midwives.index') }}">
                     <i class="fa-solid fa-user-nurse"></i>
                     <span>Manage Midwives</span>
@@ -417,7 +431,7 @@
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-left">
-                <span>Manage Midwives</span>
+                <span>Midwife Requests</span>
             </div>
             <div class="header-right">
                 <div class="user-badge-container">
@@ -431,8 +445,8 @@
 
         <!-- Main Content -->
         <main class="content-container">
-            <h1 class="page-title">Manage Midwives</h1>
-            <p class="page-subtitle">View, edit, and remove approved midwives from the system.</p>
+            <h1 class="page-title">Midwife Registrations</h1>
+            <p class="page-subtitle">Review and approve new midwife registration requests for the clinic.</p>
 
             @if(session('success'))
                 <div class="alert-success">
@@ -448,39 +462,52 @@
                             <th>Midwife Name</th>
                             <th>Email Address</th>
                             <th>Assigned Area</th>
-                            <th>Approved On</th>
+                            <th>Requested On</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($midwives as $midwifeUser)
+                        @forelse($requests as $request)
                             <tr>
-                                <td class="name-cell">{{ $midwifeUser->name }}</td>
-                                <td>{{ $midwifeUser->email }}</td>
+                                <td class="name-cell">{{ $request->name }}</td>
+                                <td>{{ $request->email }}</td>
                                 <td>
                                     <i class="fa-solid fa-location-dot" style="color: #00c853; margin-right: 6px;"></i>
-                                    {{ $midwifeUser->midwife->area->area_name ?? 'N/A' }}
+                                    {{ $request->midwife->area->area_name ?? 'N/A' }}
                                 </td>
-                                <td>{{ $midwifeUser->updated_at->format('M d, Y') }}</td>
+                                <td>{{ $request->created_at->format('M d, Y') }}<br><span style="color:#94a3b8; font-size: 12px;">{{ $request->created_at->format('h:i A') }}</span></td>
                                 <td>
-                                    <a href="{{ route('admin.midwives.edit', $midwifeUser->id) }}" class="btn-action btn-edit">
-                                        <i class="fa-solid fa-pen-to-square"></i> Edit
-                                    </a>
-                                    
-                                    <form action="{{ route('admin.midwives.destroy', $midwifeUser->id) }}" method="POST" class="action-form" onsubmit="return confirm('Are you sure you want to delete this midwife?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-action btn-delete">
-                                            <i class="fa-solid fa-trash"></i> Delete
-                                        </button>
-                                    </form>
+                                    <span class="status-badge status-{{ strtolower($request->status) }}">
+                                        {{ $request->status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($request->status === 'pending')
+                                        <form action="{{ route('admin.midwife.approve', $request->id) }}" method="POST" class="action-form">
+                                            @csrf
+                                            <button type="submit" class="btn-action btn-approve">
+                                                <i class="fa-solid fa-check"></i> Approve
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('admin.midwife.reject', $request->id) }}" method="POST" class="action-form">
+                                            @csrf
+                                            <button type="submit" class="btn-action btn-reject" onclick="return confirm('Are you sure you want to reject this request?');">
+                                                <i class="fa-solid fa-xmark"></i> Reject
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span style="color: #94a3b8; font-size: 13px; font-weight: 600;">
+                                            <i class="fa-solid fa-clock-rotate-left"></i> Processed
+                                        </span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">
-                                    <i class="fa-solid fa-user-nurse" style="font-size: 32px; color: #cbd5e1; margin-bottom: 12px; display: block;"></i>
-                                    No approved midwives found.
+                                <td colspan="6" style="text-align: center; padding: 40px; color: #64748b;">
+                                    <i class="fa-regular fa-folder-open" style="font-size: 32px; color: #cbd5e1; margin-bottom: 12px; display: block;"></i>
+                                    No midwife registration requests found.
                                 </td>
                             </tr>
                         @endforelse
