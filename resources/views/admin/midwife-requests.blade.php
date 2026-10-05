@@ -484,13 +484,13 @@
                                 </td>
                                 <td>
                                     @if($request->status === 'pending')
-                                        <form action="{{ route('admin.midwife.approve', $request->id) }}" method="POST" class="action-form">
+                                        <form action="{{ route('admin.midwife-requests.approve', $request->id) }}" method="POST" class="action-form">
                                             @csrf
                                             <button type="submit" class="btn-action btn-approve">
                                                 <i class="fa-solid fa-check"></i> Approve
                                             </button>
                                         </form>
-                                        <form action="{{ route('admin.midwife.reject', $request->id) }}" method="POST" class="action-form">
+                                        <form action="{{ route('admin.midwife-requests.reject', $request->id) }}" method="POST" class="action-form">
                                             @csrf
                                             <button type="submit" class="btn-action btn-reject" onclick="return confirm('Are you sure you want to reject this request?');">
                                                 <i class="fa-solid fa-xmark"></i> Reject

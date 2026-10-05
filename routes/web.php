@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:provider,admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        Route::get('/midwife-requests', [\App\Http\Controllers\AdminController::class, 'midwifeRequests'])->name('midwife-requests.index');
+        Route::get('/midwife-requests', [\App\Http\Controllers\AdminController::class, 'midwifeRequests'])->name('midwife-requests');
         Route::post('/midwife-requests/{id}/approve', [\App\Http\Controllers\AdminController::class, 'approveMidwife'])->name('midwife-requests.approve');
         Route::post('/midwife-requests/{id}/reject', [\App\Http\Controllers\AdminController::class, 'rejectMidwife'])->name('midwife-requests.reject');
 
