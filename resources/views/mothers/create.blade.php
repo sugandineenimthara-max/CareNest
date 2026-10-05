@@ -198,18 +198,18 @@
             </li>
             @endif
             <li class="nav-item active">
-                <a href="{{ route('mothers.index') }}">
+                <a href="{{ route('admin.mothers.index') }}">
                     <i class="fa-solid fa-user-nurse"></i>
                     <span>Mothers</span>
                 </a>
             </li>
-            <li class="nav-item"><a href="{{ route('children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
-            <li class="nav-item"><a href="{{ route('immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
-            <li class="nav-item"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
 
 
-            <li class="nav-item"><a href="{{ route('triposha.index') }}"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
-            <li class="nav-item"><a href="{{ route('attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.triposha.index') }}"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
             <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
         </ul>
         <div class="sidebar-footer">
@@ -227,7 +227,7 @@
         <!-- Header -->
         <header class="top-header">
             <div class="header-left">
-                <a href="{{ route('mothers.index') }}" class="back-btn" title="Back to Mothers">
+                <a href="{{ route('admin.mothers.index') }}" class="back-btn" title="Back to Mothers">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
                 Register New Mother
@@ -539,7 +539,7 @@
 
                 <!-- Action Buttons -->
                 <div class="form-actions">
-                    <a href="{{ route('mothers.index') }}" class="btn-cancel">Cancel</a>
+                    <a href="{{ route('admin.mothers.index') }}" class="btn-cancel">Cancel</a>
                     <button type="submit" class="btn-submit" id="submitBtn">
                         <i class="fa-solid fa-floppy-disk"></i>
                         Register Mother

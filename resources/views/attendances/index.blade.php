@@ -167,12 +167,12 @@
         <li class="nav-item"><a href="{{ route('admin.midwife-requests') }}"><i class="fa-solid fa-user-check"></i><span>Midwife Requests</span></a></li>
         <li class="nav-item"><a href="{{ route('admin.midwives.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Manage Midwives</span></a></li>
         @endif
-        <li class="nav-item"><a href="{{ route('mothers.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Mothers</span></a></li>
-        <li class="nav-item"><a href="{{ route('children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
-        <li class="nav-item"><a href="{{ route('immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
-        <li class="nav-item"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
-        <li class="nav-item"><a href="{{ route('triposha.index') }}"><i class="fa-solid fa-box-open"></i><span>Thriposha Book</span></a></li>
-        <li class="nav-item active"><a href="{{ route('attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
+        <li class="nav-item"><a href="{{ route('admin.mothers.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Mothers</span></a></li>
+        <li class="nav-item"><a href="{{ route('admin.children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
+        <li class="nav-item"><a href="{{ route('admin.immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
+        <li class="nav-item"><a href="{{ route('admin.alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
+        <li class="nav-item"><a href="{{ route('admin.triposha.index') }}"><i class="fa-solid fa-box-open"></i><span>Thriposha Book</span></a></li>
+        <li class="nav-item active"><a href="{{ route('admin.attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
         <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
     </ul>
 
@@ -278,7 +278,7 @@
                 </div>
             </div>
 
-            <form id="attendanceBatchForm" method="POST" action="{{ route('attendances.store.batch') }}">
+            <form id="attendanceBatchForm" method="POST" action="{{ route('admin.attendances.store.batch') }}">
                 @csrf
 
                 {{-- Hidden input for clinic type --}}
@@ -383,7 +383,7 @@
             </div>
 
             {{-- Filters --}}
-            <form method="GET" action="{{ route('attendances.index') }}" class="filter-bar">
+            <form method="GET" action="{{ route('admin.attendances.index') }}" class="filter-bar">
                 <i class="fa-solid fa-magnifying-glass" style="color:#94a3b8;"></i>
                 <input type="text" name="search" placeholder="Search by participant name, clinic name, or notes..." value="{{ $search }}" style="flex:1;">
 
@@ -398,7 +398,7 @@
 
                 <button type="submit" class="btn-filter"><i class="fa-solid fa-filter"></i> Filter</button>
                 @if($search || $clinicType || $dateFrom || $dateTo)
-                <a href="{{ route('attendances.index') }}" style="font-size:13px; color:#64748b; font-weight:600; text-decoration:none;">Clear</a>
+                <a href="{{ route('admin.attendances.index') }}" style="font-size:13px; color:#64748b; font-weight:600; text-decoration:none;">Clear</a>
                 @endif
             </form>
 
@@ -497,7 +497,7 @@
                                         {{ $att->created_at ? $att->created_at->format('h:i A') : '—' }}
                                     </td>
                                     <td>
-                                        <form method="POST" action="{{ route('attendances.destroy', $att->id) }}" onsubmit="return confirm('Remove this attendance record?')">
+                                        <form method="POST" action="{{ route('admin.attendances.destroy', $att->id) }}" onsubmit="return confirm('Remove this attendance record?')">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="btn-del-record" title="Delete">
                                                 <i class="fa-solid fa-trash"></i>

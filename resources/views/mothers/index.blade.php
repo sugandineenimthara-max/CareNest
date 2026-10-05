@@ -295,38 +295,38 @@
             </li>
             @endif
             <li class="nav-item active">
-                <a href="{{ route('mothers.index') }}">
+                <a href="{{ route('admin.mothers.index') }}">
                     <i class="fa-solid fa-user-nurse"></i>
                     <span>Mothers</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('children.index') }}">
+                <a href="{{ route('admin.children.index') }}">
                     <i class="fa-solid fa-baby"></i>
                     <span>Children</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('immunizations.index') }}">
+                <a href="{{ route('admin.immunizations.index') }}">
                     <i class="fa-solid fa-syringe"></i>
                     <span>Immunizations</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('alerts.index') }}">
+                <a href="{{ route('admin.alerts.index') }}">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     <span>High-Risk Alerts</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="{{ route('triposha.index') }}">
+                <a href="{{ route('admin.triposha.index') }}">
                     <i class="fa-solid fa-book-medical"></i>
                     <span>Triposha Book</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('attendances.index') }}">
+                <a href="{{ route('admin.attendances.index') }}">
                     <i class="fa-solid fa-calendar-check"></i>
                     <span>Clinic Attendances</span>
                 </a>
@@ -340,7 +340,7 @@
         </ul>
 
         <div class="sidebar-footer">
-            <a href="{{ route('mothers.create') }}" class="btn-schedule" style="text-decoration:none;">
+            <a href="{{ route('admin.mothers.create') }}" class="btn-schedule" style="text-decoration:none;">
                 <i class="fa-solid fa-user-plus"></i>
                 <span>Register Mother</span>
             </a>
@@ -360,7 +360,7 @@
         <header class="top-header">
             <div class="header-left">Mothers Registry</div>
 
-            <form method="GET" action="{{ route('mothers.index') }}" class="search-box">
+            <form method="GET" action="{{ route('admin.mothers.index') }}" class="search-box">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input type="text" id="motherSearch" name="search" class="search-input"
                     placeholder="Search by name, phone, address..."
@@ -387,7 +387,7 @@
                     <h1 class="page-title">Mothers Registry</h1>
                     <p class="page-sub">All registered mothers grouped by assigned midwife</p>
                 </div>
-                <a href="{{ route('mothers.create') }}" class="btn-register">
+                <a href="{{ route('admin.mothers.create') }}" class="btn-register">
                     <i class="fa-solid fa-user-plus"></i>
                     Register New Mother
                 </a>
@@ -437,7 +437,7 @@
                 <div class="no-results">
                     <i class="fa-solid fa-magnifying-glass" style="display:block;"></i>
                     <p>No mothers found matching <strong>"{{ $search }}"</strong></p>
-                    <a href="{{ route('mothers.index') }}" style="color:#00c853; font-weight:700; font-size:14px; margin-top:10px; display:inline-block;">Clear search</a>
+                    <a href="{{ route('admin.mothers.index') }}" style="color:#00c853; font-weight:700; font-size:14px; margin-top:10px; display:inline-block;">Clear search</a>
                 </div>
             @else
                 @forelse($midwives as $midwife)
@@ -472,7 +472,7 @@
                                             $initials = collect(explode(' ', $mother->mother_name))->map(fn($w) => strtoupper(substr($w,0,1)))->take(2)->implode('');
                                             $latestPregnancy = $mother->pregnancyHistories->last();
                                         @endphp
-                                        <a href="{{ route('mothers.show', $mother->mother_id) }}" class="mother-card">
+                                        <a href="{{ route('admin.mothers.show', $mother->mother_id) }}" class="mother-card">
                                             <div class="mother-card-top">
                                                 <div class="mother-initials">{{ $initials }}</div>
                                                 <div class="mother-card-info">

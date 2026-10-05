@@ -590,44 +590,57 @@
                 </a>
             </li>
             @endif
+            @php
+                $role = Auth::user()->role;
+                $prefix = ($role === 'provider' || $role === 'admin') ? 'admin' : ($role === 'midwife' ? 'midwife' : 'mother');
+            @endphp
             <li class="nav-item">
-                <a href="{{ route('mothers.index') }}">
+                <a href="{{ route($prefix . '.mothers.index') }}">
                     <i class="fa-solid fa-user-nurse"></i>
                     <span>Mothers</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="{{ route('children.index') }}">
+                <a href="{{ route($prefix . '.children.index') }}">
                     <i class="fa-solid fa-baby"></i>
                     <span>Children</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('immunizations.index') }}">
+                <a href="{{ route($prefix . '.immunizations.index') }}">
                     <i class="fa-solid fa-syringe"></i>
                     <span>Immunizations</span>
                 </a>
             </li>
+            @if($role !== 'mother')
             <li class="nav-item">
-                <a href="{{ route('alerts.index') }}">
+                <a href="{{ route($prefix . '.alerts.index') }}">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     <span>High-Risk Alerts</span>
                 </a>
             </li>
             <!-- Additional Sections mapped to database tables -->
             <li class="nav-item">
-                <a href="{{ route('triposha.index') }}">
+                <a href="{{ route($prefix . '.triposha.index') }}">
                     <i class="fa-solid fa-book-medical"></i>
                     <span>Triposha Book</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('attendances.index') }}">
+                <a href="{{ route($prefix . '.attendances.index') }}">
                     <i class="fa-solid fa-calendar-check"></i>
                     <span>Clinic Attendances</span>
                 </a>
             </li>
+            @else
+            <li class="nav-item">
+                <a href="{{ route('mother.notifications.index') }}">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+            @endif
             <li class="nav-item">
                 <a href="#reports">
                     <i class="fa-solid fa-file-invoice"></i>

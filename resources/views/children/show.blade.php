@@ -278,13 +278,13 @@
             <li class="nav-item"><a href="{{ route('admin.midwife-requests') }}"><i class="fa-solid fa-user-check"></i><span>Midwife Requests</span></a></li>
             <li class="nav-item"><a href="{{ route('admin.midwives.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Manage Midwives</span></a></li>
             @endif
-            <li class="nav-item"><a href="{{ route('mothers.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Mothers</span></a></li>
-            <li class="nav-item active"><a href="{{ route('children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
-            <li class="nav-item"><a href="{{ route('immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
-            <li class="nav-item"><a href="{{ route('alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.mothers.index') }}"><i class="fa-solid fa-user-nurse"></i><span>Mothers</span></a></li>
+            <li class="nav-item active"><a href="{{ route('admin.children.index') }}"><i class="fa-solid fa-baby"></i><span>Children</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.immunizations.index') }}"><i class="fa-solid fa-syringe"></i><span>Immunizations</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.alerts.index') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>High-Risk Alerts</span></a></li>
             <li class="nav-item"><a href="#lab-tests"><i class="fa-solid fa-vial-circle-check"></i><span>Lab Tests</span></a></li>
-            <li class="nav-item"><a href="{{ route('triposha.index') }}"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
-            <li class="nav-item"><a href="{{ route('attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.triposha.index') }}"><i class="fa-solid fa-book-medical"></i><span>Triposha Book</span></a></li>
+            <li class="nav-item"><a href="{{ route('admin.attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
             <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
         </ul>
         <div class="sidebar-footer">
@@ -302,13 +302,13 @@
     <div class="main-wrapper">
         <header class="top-header">
             <div class="header-left">
-                <a href="{{ route('children.index') }}" class="back-btn" title="Back to Children">
+                <a href="{{ route('admin.children.index') }}" class="back-btn" title="Back to Children">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
                 <span>Child Profile &amp; Immunization</span>
             </div>
             <div class="header-actions">
-                <a href="{{ route('children.edit', $child->child_id) }}" class="btn-action btn-edit">
+                <a href="{{ route('admin.children.edit', $child->child_id) }}" class="btn-action btn-edit">
                     <i class="fa-solid fa-pen-to-square"></i>
                     <span>Edit Child</span>
                 </a>
@@ -395,7 +395,7 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('mothers.show', $child->mother_id) }}" class="btn-view-mother">
+                            <a href="{{ route('admin.mothers.show', $child->mother_id) }}" class="btn-view-mother">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                                 <span>Open Full Mother Profile</span>
                             </a>
@@ -551,7 +551,7 @@
                 <h3 class="modal-title"><i class="fa-solid fa-syringe" style="color:#00c853;"></i> Record Vaccine Dose</h3>
                 <button type="button" class="close-btn" onclick="closeVaccineModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form action="{{ route('immunizations.child.store') }}" method="POST">
+            <form action="{{ route('admin.immunizations.child.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="child_id" value="{{ $child->child_id }}">
 
