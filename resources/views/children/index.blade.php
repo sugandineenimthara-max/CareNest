@@ -361,13 +361,6 @@
                 <i class="fa-solid fa-plus"></i>
                 <span>Register Child</span>
             </a>
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Log Out</span>
-                </button>
-            </form>
         </div>
     </aside>
 
@@ -384,13 +377,7 @@
                 <input type="text" name="search" class="search-input" placeholder="Search child name, ID, or mother..." value="{{ $search }}">
             </form>
             <div class="header-right">
-                <div class="user-profile">
-                    <div class="user-avatar">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>
-                    <div class="user-info">
-                        <span class="user-name">{{ $user->name ?? 'User' }}</span>
-                        <span class="user-role">{{ ucfirst($user->role ?? 'Provider') }}</span>
-                    </div>
-                </div>
+                @include('partials.top-header-user')
             </div>
         </header>
 

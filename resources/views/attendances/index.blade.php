@@ -46,9 +46,9 @@
 
         /* ── Main ── */
         .main-wrapper { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
-        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 48px; background: rgba(255,255,255,0.7); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226,232,240,0.6); position: sticky; top: 0; z-index: 90; }
+        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; min-height: 76px; box-sizing: border-box; background: rgba(255,255,255,0.7); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226,232,240,0.6); position: sticky; top: 0; z-index: 90; }
         .header-left { font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: #1b4d3e; display: flex; align-items: center; gap: 12px; }
-        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
         .user-badge { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #334155; }
 
         .content { padding: 32px 48px; display: flex; flex-direction: column; gap: 28px; }
@@ -175,16 +175,6 @@
         <li class="nav-item active"><a href="{{ route('admin.attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
         <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
     </ul>
-
-    <div class="sidebar-footer">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="logout-btn">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Log Out</span>
-            </button>
-        </form>
-    </div>
 </aside>
 
 <!-- ═══════════════════════════ MAIN CONTENT ═══════════════════════════ -->
@@ -196,11 +186,7 @@
             Clinic Attendances Management
         </div>
         <div class="header-right">
-            <div class="user-badge">
-                <i class="fa-solid fa-circle-user" style="font-size:20px; color:#94a3b8;"></i>
-                <span>{{ $user->name ?? 'Staff' }}</span>
-                <span style="font-size:11px; color:#94a3b8; font-weight:600;">{{ ucfirst($user->role ?? '') }}</span>
-            </div>
+            @include('partials.top-header-user')
         </div>
     </header>
 

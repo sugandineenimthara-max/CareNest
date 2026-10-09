@@ -234,15 +234,6 @@
             <li class="nav-item"><a href="{{ route('admin.attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
             <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
         </ul>
-        <div class="sidebar-footer">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Log Out</span>
-                </button>
-            </form>
-        </div>
     </aside>
 
     <!-- Main Content -->
@@ -253,6 +244,9 @@
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
                 <span>Register New Child</span>
+            </div>
+            <div class="header-right">
+                @include('partials.top-header-user')
             </div>
         </header>
 

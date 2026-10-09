@@ -93,12 +93,5 @@
                 <span>Register Mother</span>
             </a>
         @endif
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="logout-btn">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                <span>Log Out</span>
-            </button>
-        </form>
     </div>
 </aside>

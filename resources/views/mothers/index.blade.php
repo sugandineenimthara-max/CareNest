@@ -344,13 +344,6 @@
                 <i class="fa-solid fa-user-plus"></i>
                 <span>Register Mother</span>
             </a>
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Log Out</span>
-                </button>
-            </form>
         </div>
     </aside>
 
@@ -368,15 +361,7 @@
             </form>
 
             <div class="header-right">
-                <button class="icon-btn" title="Settings">
-                    <i class="fa-solid fa-gear"></i>
-                </button>
-                <div class="user-badge-container">
-                    <span class="user-role-label">{{ ucfirst($user->role ?? 'Admin') }}</span>
-                    <div class="user-avatar">
-                        <i class="fa-regular fa-user"></i>
-                    </div>
-                </div>
+                @include('partials.top-header-user')
             </div>
         </header>
 

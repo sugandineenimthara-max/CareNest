@@ -287,15 +287,6 @@
             <li class="nav-item"><a href="{{ route('admin.attendances.index') }}"><i class="fa-solid fa-calendar-check"></i><span>Clinic Attendances</span></a></li>
             <li class="nav-item"><a href="#reports"><i class="fa-solid fa-file-invoice"></i><span>Vaccine Reports</span></a></li>
         </ul>
-        <div class="sidebar-footer">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Log Out</span>
-                </button>
-            </form>
-        </div>
     </aside>
 
     <!-- Main Content -->
@@ -307,15 +298,18 @@
                 </a>
                 <span>Child Profile &amp; Immunization</span>
             </div>
-            <div class="header-actions">
-                <a href="{{ route('admin.children.edit', $child->child_id) }}" class="btn-action btn-edit">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    <span>Edit Child</span>
-                </a>
-                <button type="button" class="btn-action btn-record-vaccine" onclick="openVaccineModal('', '')">
-                    <i class="fa-solid fa-syringe"></i>
-                    <span>Record Vaccine Dose</span>
-                </button>
+            <div class="header-right" style="display: flex; align-items: center; gap: 16px;">
+                <div class="header-actions">
+                    <a href="{{ route('admin.children.edit', $child->child_id) }}" class="btn-action btn-edit">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Edit Child</span>
+                    </a>
+                    <button type="button" class="btn-action btn-record-vaccine" onclick="openVaccineModal('', '')">
+                        <i class="fa-solid fa-syringe"></i>
+                        <span>Record Vaccine Dose</span>
+                    </button>
+                </div>
+                @include('partials.top-header-user')
             </div>
         </header>
 

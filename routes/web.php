@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\MotherController;
+use App\Http\Controllers\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -12,6 +14,12 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Forgot & Reset Password
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
 // Mother Registration
 Route::get('/register/mother', [AuthController::class, 'showRegisterMother'])->name('register.mother');
@@ -23,6 +31,12 @@ Route::post('/register/midwife', [AuthController::class, 'registerMidwife']);
 
 // Protected Routes
 Route::middleware('auth')->group(function () {
+    
+    // Change Password Routes (Any authenticated user)
+    Route::get('/change-password', [PasswordController::class, 'showChangePassword'])->name('password.change');
+    Route::post('/change-password/verify-current', [PasswordController::class, 'verifyCurrentPassword'])->name('password.verify_current');
+    Route::post('/change-password', [PasswordController::class, 'updatePassword'])->name('password.update_auth');
+    Route::post('/change-password/send-auth-link', [PasswordController::class, 'sendIdentityAuthLink'])->name('password.send_auth_link');
     
     // Generic Dashboard Redirect to fix route('dashboard') references
     Route::get('/dashboard', function() {
